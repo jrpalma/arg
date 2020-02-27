@@ -26,7 +26,7 @@ func ShowUser(args ExecArgs) error {
 		return fmt.Errorf("Expected uint64 -id flag")
 	}
 
-	for i, _ := range users {
+	for i := range users {
 		if users[i].ID == id {
 			fmt.Printf("%+v\n", users[i])
 			break
@@ -40,7 +40,7 @@ func DisableUser(args ExecArgs) error {
 	if !args.Get("-id", &id) {
 		return fmt.Errorf("Expected uint64 -id flag")
 	}
-	for i, _ := range users {
+	for i := range users {
 		if users[i].ID == id {
 			users[i].Enabled = false
 			fmt.Printf("Disabled user with ID %v\n", id)
@@ -69,7 +69,7 @@ func Example_usage() {
 	}
 	disableCmd.Flags.ReqInt64("-id", "The user ID to be disabled")
 
-	//The parser can have a nil ouput writer.
+	//The parser can have a nil output writer.
 	//We could use os.Stdout, but that will
 	//mess with the testable output.
 	parser := NewParser(nil)
@@ -84,7 +84,7 @@ func Example_usage() {
 	parser.Parse(false, showArgs)
 	parser.Parse(false, disableArgs)
 
-	//Should fail with unkonwn argument
+	//Should fail with unknown argument
 	err := parser.Parse(false, badArgs)
 	if err == ErrInvalidArgs {
 		fmt.Printf("%v\n", err)

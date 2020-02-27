@@ -43,7 +43,7 @@ func (fs *FlagSet) ReqEnum(name string, enum []string, help string) {
 	fs.add(&flag{name: name, enum: enum, help: help, typ: enumFlag, req: true})
 }
 
-// ReqArgs adds a srequired number arugments with name to the set.
+// ReqArgs adds a required number arguments with name to the set.
 // Count is the number of arguments required for a flag.
 // If usage is displayed, the help string will be used to document the flag.
 func (fs *FlagSet) ReqArgs(name string, count uint, help string) {
@@ -87,7 +87,7 @@ func (fs *FlagSet) OptEnum(name string, enum []string, help string) {
 	fs.add(&flag{name: name, enum: enum, help: help, typ: enumFlag})
 }
 
-// OptArgs adds an optional number arugments to a flag with name to the set.
+// OptArgs adds an optional number arguments to a flag with name to the set.
 // Count is the number of arguments required for a flag.
 // If usage is displayed, the help string will be used to document the flag.
 func (fs *FlagSet) OptArgs(name string, count uint, help string) {

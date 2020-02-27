@@ -4,19 +4,40 @@ import (
 	"testing"
 )
 
-func TestExecArgs(t *testing.T) {
-	kvp := make(map[string]string)
-	kvp["string"] = "string"
-	kvp["bool"] = "true"
-	kvp["int64"] = "-3"
-	kvp["uint64"] = "3"
-	kvp["float64"] = "3.0"
-	kvp["enum"] = "enabled"
-	kvp["args"] = "1 2"
-	kvp["sf64"] = "3.0 2.0"
-	kvp["si64"] = "3 -2"
-	kvp["sui64"] = "3 2"
+func TestUnknown(t *testing.T) {
+	kvp := getKVP()
+	ca := &execargs{kvp: kvp}
 
+	if ca.getString("unknown", nil) {
+		t.Errorf("Should fail")
+	}
+	if ca.getBool("unknown", nil) {
+		t.Errorf("Should fail")
+	}
+	if ca.getInt64("unknown", nil) {
+		t.Errorf("Should fail")
+	}
+	if ca.getUint64("unknown", nil) {
+		t.Errorf("Should fail")
+	}
+	if ca.getFloat64("unknown", nil) {
+		t.Errorf("Should fail")
+	}
+	if ca.getStringSlice("unknown", nil) {
+		t.Errorf("Should fail")
+	}
+	if ca.getFloat64Slice("unknown", nil) {
+		t.Errorf("Should fail")
+	}
+	if ca.getInt64Slice("unknown", nil) {
+		t.Errorf("Should fail")
+	}
+	if ca.getUint64Slice("unknown", nil) {
+		t.Errorf("Should fail")
+	}
+}
+
+func TestGetters(t *testing.T) {
 	var s string
 	var b bool
 	var i64 int64
@@ -27,8 +48,9 @@ func TestExecArgs(t *testing.T) {
 	var sf64 []float64
 	var si64 []int64
 	var sui64 []uint64
-
+	kvp := getKVP()
 	ca := &execargs{kvp: kvp}
+
 	if !ca.getString("string", &s) && s != "string" {
 		t.Errorf("Failed to get arg string")
 	}
@@ -59,6 +81,20 @@ func TestExecArgs(t *testing.T) {
 	if !ca.getUint64Slice("sui64", &sui64) && len(sui64) != 2 {
 		t.Errorf("Failed to get arg sui64")
 	}
+}
+func TestGet(t *testing.T) {
+	var s string
+	var b bool
+	var i64 int64
+	var ui64 uint64
+	var f64 float64
+	var e string
+	var slice []string
+	var sf64 []float64
+	var si64 []int64
+	var sui64 []uint64
+	kvp := getKVP()
+	ca := &execargs{kvp: kvp}
 
 	if !ca.Get("string", &s) {
 		t.Errorf("Failed to get arg string")
@@ -93,32 +129,20 @@ func TestExecArgs(t *testing.T) {
 	if ca.Get("unknown", nil) {
 		t.Errorf("Get should failed")
 	}
+}
 
-	if ca.getString("unknown", nil) {
-		t.Errorf("Should fail")
-	}
-	if ca.getBool("unknown", nil) {
-		t.Errorf("Should fail")
-	}
-	if ca.getInt64("unknown", nil) {
-		t.Errorf("Should fail")
-	}
-	if ca.getUint64("unknown", nil) {
-		t.Errorf("Should fail")
-	}
-	if ca.getFloat64("unknown", nil) {
-		t.Errorf("Should fail")
-	}
-	if ca.getStringSlice("unknown", nil) {
-		t.Errorf("Should fail")
-	}
-	if ca.getFloat64Slice("unknown", nil) {
-		t.Errorf("Should fail")
-	}
-	if ca.getInt64Slice("unknown", nil) {
-		t.Errorf("Should fail")
-	}
-	if ca.getUint64Slice("unknown", nil) {
-		t.Errorf("Should fail")
-	}
+func getKVP() map[string]string {
+	kvp := make(map[string]string)
+	kvp["string"] = "string"
+	kvp["bool"] = "true"
+	kvp["int64"] = "-3"
+	kvp["uint64"] = "3"
+	kvp["float64"] = "3.0"
+	kvp["enum"] = "enabled"
+	kvp["args"] = "1 2"
+	kvp["sf64"] = "3.0 2.0"
+	kvp["si64"] = "3 -2"
+	kvp["sui64"] = "3 2"
+
+	return kvp
 }

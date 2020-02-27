@@ -16,7 +16,7 @@ func TestAllRequired(t *testing.T) {
 	cmd.Help = "Show user name"
 	cmd.Flags.ReqInt64("id", "The ID of the user to show")
 	cmd.Flags.ReqString("city", "The name of the city")
-	cmd.Flags.ReqBool("admin", "Includ admins in the result")
+	cmd.Flags.ReqBool("admin", "Include admins in the result")
 	cmd.Flags.ReqUint64("zipcode", "The zipcode of the city to match")
 	cmd.Flags.ReqFloat64("minsalary", "The minimum salary to  use")
 	cmd.Flags.ReqArgs("experience", 2, "The <min years> <max years> years of experience")
