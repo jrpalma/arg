@@ -21,6 +21,5 @@ However, this comes at a price that must be paid upfront. It takes some time to 
 
 ## Arg's Philosophies
 Arg's core philosophies choose clarity over brevity, and simplicity over features. This means that CLIs created with
-Arg are more verbose than POSIX compliant CLIs that allow flag stacking for example. There might be times when some
-CLIs might not fit Arg's programming model. However, this might be a signal that the CLIs need more refinement.
+Arg are more verbose than POSIX compliant CLIs that allow flag stacking for example.
 
