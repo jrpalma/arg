@@ -4,9 +4,9 @@ import (
 	"testing"
 )
 
-func TestInvalidFlagSet(t *testing.T) {
-	var fs2 FlagSet
-	fs := getFlagSet()
+func TestInvalidCmdFlagSet(t *testing.T) {
+	var fs2 CmdFlagSet
+	fs := getCmdFlagSet()
 
 	_, ok := fs2.kvp["bad"]
 	if ok {
@@ -19,7 +19,7 @@ func TestInvalidFlagSet(t *testing.T) {
 }
 
 func TestExist(t *testing.T) {
-	fs := getFlagSet()
+	fs := getCmdFlagSet()
 
 	_, exist := fs.kvp["rs"]
 	if !exist {
@@ -71,8 +71,8 @@ func TestExist(t *testing.T) {
 	}
 }
 
-func TestFlagSet(t *testing.T) {
-	fs := getFlagSet()
+func TestCmdFlagSet(t *testing.T) {
+	fs := getCmdFlagSet()
 
 	f, _ := fs.kvp["rs"]
 	if f.Type() != stringFlag {
@@ -124,8 +124,8 @@ func TestFlagSet(t *testing.T) {
 	}
 }
 
-func getFlagSet() *FlagSet {
-	fs := &FlagSet{}
+func getCmdFlagSet() *CmdFlagSet {
+	fs := &CmdFlagSet{}
 	fs.ReqString("rs", "", "rs")
 	fs.ReqBool("rb", "", "rb")
 	fs.ReqInt64("ri64", "", "ri64")
