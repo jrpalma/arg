@@ -14,12 +14,12 @@ func TestAllRequired(t *testing.T) {
 	cmd.Name = "show"
 	cmd.Prefix = "box user"
 	cmd.Help = "Show user name"
-	cmd.Flags.ReqInt64("id", "The ID of the user to show")
-	cmd.Flags.ReqString("city", "The name of the city")
-	cmd.Flags.ReqBool("admin", "Include admins in the result")
-	cmd.Flags.ReqUint64("zipcode", "The zipcode of the city to match")
-	cmd.Flags.ReqFloat64("minsalary", "The minimum salary to  use")
-	cmd.Flags.ReqArgs("experience", 2, "The <min years> <max years> years of experience")
+	cmd.Flags.ReqInt64("id", "", "The ID of the user to show")
+	cmd.Flags.ReqString("city", "", "The name of the city")
+	cmd.Flags.ReqBool("admin", "", "Include admins in the result")
+	cmd.Flags.ReqUint64("zipcode", "", "The zipcode of the city to match")
+	cmd.Flags.ReqFloat64("minsalary", "", "The minimum salary to  use")
+	cmd.Flags.ReqArgs("experience", "", 2, "The <min years> <max years> years of experience")
 
 	//Verify all parsed args
 	args := m.getCmdArgs(cmd)
@@ -49,8 +49,8 @@ func TestInvalid(t *testing.T) {
 	cmd.Name = "show"
 	cmd.Prefix = "box user"
 	cmd.Help = "Show user name"
-	cmd.Flags.ReqInt64("id", "The ID of the user to show")
-	cmd.Flags.ReqString("city", "The name of the city")
+	cmd.Flags.ReqInt64("id", "", "The ID of the user to show")
+	cmd.Flags.ReqString("city", "", "The name of the city")
 
 	args := m.getCmdArgs(cmd)
 	if len(args) != 0 {
@@ -72,8 +72,8 @@ func TestInvalid(t *testing.T) {
 	}
 
 	//Invalid number of args
-	cmd.Flags.ReqArgs("experience", 2, "The <min years> <max years> years of experience")
-	m.args = []string{"id", "3", "experience", "3"}
+	cmd.Flags.ReqArgs("experience", "", 2, "The <min years> <max years> years of experience")
+	m.args = []string{"id", "3", "", "3"}
 	args = m.getCmdArgs(cmd)
 	if len(args) != 0 {
 		t.Errorf("getCmdArgs should have return no args")

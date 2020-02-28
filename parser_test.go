@@ -26,8 +26,8 @@ func TestParser(t *testing.T) {
 		},
 	}
 
-	show.Flags.OptBool("admin", "Include admin users")
-	delete.Flags.ReqInt64("id", "The ID of the user to be delted")
+	show.Flags.OptBool("admin", "", "Include admin users")
+	delete.Flags.ReqInt64("id", "", "The ID of the user to be delted")
 
 	testParser := func(args []string) error {
 		output := &bytes.Buffer{}

@@ -126,20 +126,20 @@ func TestFlagSet(t *testing.T) {
 
 func getFlagSet() *FlagSet {
 	fs := &FlagSet{}
-	fs.ReqString("rs", "rs")
-	fs.ReqBool("rb", "rb")
-	fs.ReqInt64("ri64", "ri64")
-	fs.ReqUint64("rui64", "rui64")
-	fs.ReqFloat64("rf64", "rf64")
-	fs.ReqEnum("renum", []string{"e", "n", "u", "m"}, "renum")
+	fs.ReqString("rs", "", "rs")
+	fs.ReqBool("rb", "", "rb")
+	fs.ReqInt64("ri64", "", "ri64")
+	fs.ReqUint64("rui64", "", "rui64")
+	fs.ReqFloat64("rf64", "", "rf64")
+	fs.ReqEnum("renum", "", []string{"e", "n", "u", "m"}, "renum")
 
-	fs.ReqArgs("rags", 3, "rags")
-	fs.OptString("os", "os")
-	fs.OptBool("ob", "ob")
-	fs.OptInt64("oi64", "oi64")
-	fs.OptUint64("oui64", "oui64")
-	fs.OptFloat64("of64", "of64")
-	fs.OptEnum("oenum", []string{"e", "n", "u", "m"}, "oenum")
-	fs.OptArgs("oags", 3, "oags")
+	fs.ReqArgs("rags", "", 3, "rags")
+	fs.OptString("os", "", "os")
+	fs.OptBool("ob", "", "ob")
+	fs.OptInt64("oi64", "", "oi64")
+	fs.OptUint64("oui64", "", "oui64")
+	fs.OptFloat64("of64", "", "of64")
+	fs.OptEnum("oenum", "", []string{"e", "n", "u", "m"}, "oenum")
+	fs.OptArgs("oags", "", 3, "oags")
 	return fs
 }
