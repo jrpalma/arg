@@ -8,21 +8,21 @@ import (
 // ExecArgs represent the flag arguments passed to
 // a Cmd's Exec function.
 type ExecArgs interface {
-	// Get gets the flag value given by name.
+	// GetFlag gets the flag value given by name.
 	// Values are passed as pointers and can be any
 	// of the following types: string, bool, int64
 	// uint64, float64, []string, []int64, []uint64,
 	// or []float64.
 	// Returns false if the flag name does not exist
 	// or if the value type cannot be used.
-	Get(name string, value interface{}) bool
+	GetFlag(name string, value interface{}) bool
 }
 
 type execargs struct {
 	kvp map[string]string
 }
 
-func (ea *execargs) Get(name string, val interface{}) bool {
+func (ea *execargs) GetFlag(name string, val interface{}) bool {
 	var stat bool
 	switch v := val.(type) {
 	case *bool:

@@ -96,37 +96,37 @@ func TestGet(t *testing.T) {
 	kvp := getKVP()
 	ca := &execargs{kvp: kvp}
 
-	if !ca.Get("string", &s) {
+	if !ca.GetFlag("string", &s) {
 		t.Errorf("Failed to get arg string")
 	}
-	if !ca.Get("bool", &b) {
+	if !ca.GetFlag("bool", &b) {
 		t.Errorf("Failed to get arg bool")
 	}
-	if !ca.Get("int64", &i64) {
+	if !ca.GetFlag("int64", &i64) {
 		t.Errorf("Failed to get arg int64")
 	}
-	if !ca.Get("uint64", &ui64) {
+	if !ca.GetFlag("uint64", &ui64) {
 		t.Errorf("Failed to get arg uint64")
 	}
-	if !ca.Get("float64", &f64) {
+	if !ca.GetFlag("float64", &f64) {
 		t.Errorf("Failed to get arg float64")
 	}
-	if !ca.Get("enum", &e) {
+	if !ca.GetFlag("enum", &e) {
 		t.Errorf("Failed to get arg enum")
 	}
-	if !ca.Get("args", &slice) {
+	if !ca.GetFlag("args", &slice) {
 		t.Errorf("Failed to get arg slice")
 	}
-	if !ca.Get("sf64", &sf64) {
+	if !ca.GetFlag("sf64", &sf64) {
 		t.Errorf("Failed to get arg sf64")
 	}
-	if !ca.Get("si64", &si64) {
+	if !ca.GetFlag("si64", &si64) {
 		t.Errorf("Failed to get arg si64")
 	}
-	if !ca.Get("sui64", &sui64) {
+	if !ca.GetFlag("sui64", &sui64) {
 		t.Errorf("Failed to get arg sui64")
 	}
-	if ca.Get("unknown", nil) {
+	if ca.GetFlag("unknown", nil) {
 		t.Errorf("Get should failed")
 	}
 }

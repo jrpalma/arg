@@ -22,7 +22,7 @@ var users = []User{
 func ShowUser(args ExecArgs) error {
 	var id int64
 
-	if !args.Get("-id", &id) {
+	if !args.GetFlag("-id", &id) {
 		return fmt.Errorf("Expected uint64 -id flag")
 	}
 
@@ -37,7 +37,7 @@ func ShowUser(args ExecArgs) error {
 func DisableUser(args ExecArgs) error {
 	var id int64
 
-	if !args.Get("-id", &id) {
+	if !args.GetFlag("-id", &id) {
 		return fmt.Errorf("Expected uint64 -id flag")
 	}
 	for i := range users {
