@@ -22,7 +22,7 @@ func TestAllRequired(t *testing.T) {
 	cmd.Flags.ReqArgs("experience", "", 2, "The <min years> <max years> years of experience")
 
 	//Verify all parsed args
-	args := m.getCmdArgs(cmd)
+	args := m.getCmdFlags(cmd)
 	verify := func(name string, expected string) {
 		v, ok := args[name]
 		if !ok || v != expected {
@@ -35,7 +35,7 @@ func TestAllRequired(t *testing.T) {
 	verify("admin", "true")
 	verify("zipcode", "77777")
 	verify("minsalary", "50000")
-	verify("experience", "3 5")
+	verify("experience", "3,5")
 
 }
 
@@ -52,35 +52,35 @@ func TestInvalid(t *testing.T) {
 	cmd.Flags.ReqInt64("id", "", "The ID of the user to show")
 	cmd.Flags.ReqString("city", "", "The name of the city")
 
-	args := m.getCmdArgs(cmd)
+	args := m.getCmdFlags(cmd)
 	if len(args) != 0 {
-		t.Errorf("getCmdArgs should have return no args")
+		t.Errorf("getCmdFlags should have return no args")
 	}
 
 	//Missing city flag arg
 	m.args = []string{"id", "3", "city"}
-	args = m.getCmdArgs(cmd)
+	args = m.getCmdFlags(cmd)
 	if len(args) != 0 {
-		t.Errorf("getCmdArgs should have return no args")
+		t.Errorf("getCmdFlags should have return no args")
 	}
 
 	//Invalid flag
 	m.args = []string{"id", "3", "invalidflag", "invaliddarg"}
-	args = m.getCmdArgs(cmd)
+	args = m.getCmdFlags(cmd)
 	if len(args) != 0 {
-		t.Errorf("getCmdArgs should have return no args")
+		t.Errorf("getCmdFlags should have return no args")
 	}
 
 	//Invalid number of args
 	cmd.Flags.ReqArgs("experience", "", 2, "The <min years> <max years> years of experience")
 	m.args = []string{"id", "3", "", "3"}
-	args = m.getCmdArgs(cmd)
+	args = m.getCmdFlags(cmd)
 	if len(args) != 0 {
-		t.Errorf("getCmdArgs should have return no args")
+		t.Errorf("getCmdFlags should have return no args")
 	}
 
-	ret := m.useArgs(nil, nil)
+	ret := m.useFlags(nil, nil)
 	if len(ret) != 0 {
-		t.Errorf("useArgs should have return no args")
+		t.Errorf("useFlags should have return no args")
 	}
 }

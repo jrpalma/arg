@@ -69,7 +69,7 @@ func (p *Parser) Parse(exitOnError bool, args []string) error {
 	var cmd *Cmd
 	var prefix string
 	var models []model
-	var cmdArgs map[string]string
+	var cmdFlags map[string]string
 
 	if len(args) < 2 {
 		return ErrInvalidArgs
@@ -104,8 +104,8 @@ func (p *Parser) Parse(exitOnError bool, args []string) error {
 			break
 		}
 
-		cmdArgs = model.getCmdArgs(match)
-		if len(cmdArgs) == 0 {
+		cmdFlags = model.getCmdFlags(match)
+		if len(cmdFlags) == 0 {
 			continue
 		}
 
@@ -121,7 +121,7 @@ func (p *Parser) Parse(exitOnError bool, args []string) error {
 		os.Exit(1)
 	}
 
-	err := cmd.Exec(&execargs{kvp: cmdArgs})
+	err := cmd.Exec(&execargs{flags: cmdFlags})
 	if err != nil {
 		p.print(err.Error())
 		if !exitOnError {
