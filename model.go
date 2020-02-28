@@ -11,9 +11,9 @@ type model struct {
 	args []string
 }
 
-func (m *model) getCmdArgs(cmd *Cmd) map[string]string {
+func (m *model) getCmdFlags(cmd *Cmd) map[string]string {
 	allFlags := cmd.Flags.getFlags()
-	cmdArgs := make(map[string]string)
+	cmdFlags := make(map[string]string)
 	missing := make(map[string]struct{})
 
 	for name, flag := range allFlags {
@@ -36,15 +36,15 @@ func (m *model) getCmdArgs(cmd *Cmd) map[string]string {
 		}
 
 		args := m.args[i+1:]
-		usedArgs := m.useArgs(flag, args)
-		usedArgsLen := len(usedArgs)
+		usedFlags := m.useFlags(flag, args)
+		usedFlagsLen := len(usedFlags)
 
-		if usedArgsLen == 0 {
+		if usedFlagsLen == 0 {
 			return nil
 		}
 
-		cmdArgs[name] = strings.Join(usedArgs, " ")
-		i = i + usedArgsLen + 1
+		cmdFlags[name] = strings.Join(usedFlags, ",")
+		i = i + usedFlagsLen + 1
 		delete(missing, name)
 	}
 
@@ -52,10 +52,10 @@ func (m *model) getCmdArgs(cmd *Cmd) map[string]string {
 		return nil
 	}
 
-	return cmdArgs
+	return cmdFlags
 }
 
-func (m *model) useArgs(f *flag, args []string) []string {
+func (m *model) useFlags(f *flag, args []string) []string {
 	var used []string
 	argsLen := len(args)
 

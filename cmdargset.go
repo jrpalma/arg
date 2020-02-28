@@ -22,7 +22,7 @@ type CmdArgSet struct {
 }
 
 // SetTypes sets the type of arguments used by a command.
-// Valid types are: StringArg, BoolArg, Int64Ar, Uint64Arg, and Float64Arg.
+// Valid types are: StringArg, BoolArg, Int64Arg, Uint64Arg, and Float64Arg.
 func (cas *CmdArgSet) SetTypes(types ...CmdArgType) {
 	for _, argType := range types {
 		cas.args = append(cas.args, argType)
