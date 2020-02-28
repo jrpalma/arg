@@ -2,6 +2,7 @@ package arg
 
 type flag struct {
 	name  string
+	short string
 	help  string
 	req   bool
 	typ   flagType
@@ -10,6 +11,7 @@ type flag struct {
 }
 
 func (f *flag) Name() string   { return f.name }
+func (f *flag) Short() string  { return f.short }
 func (f *flag) Help() string   { return f.help }
 func (f *flag) Required() bool { return f.req }
 func (f *flag) Type() flagType { return f.typ }

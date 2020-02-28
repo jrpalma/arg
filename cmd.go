@@ -18,6 +18,6 @@ type Cmd struct {
 	Exec func(ExecArgs) error
 	// The command's flags. Flags can be required or optional.
 	Flags FlagSet
-	// The command's args. Commands can zero or more arguments.
-	Args ArgSet
+	// The command's arguments. Commands can have zero or more arguments.
+	Args CmdArgSet
 }
