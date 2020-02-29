@@ -14,16 +14,16 @@ func TestAllRequired(t *testing.T) {
 	cmd.Name = "show"
 	cmd.Prefix = "box user"
 	cmd.Help = "Show user name"
-	cmd.Flags.ReqInt64("id", "", "The ID of the user to show")
-	cmd.Flags.ReqString("city", "", "The name of the city")
-	cmd.Flags.ReqBool("admin", "", "Include admins in the result")
-	cmd.Flags.ReqUint64("zipcode", "", "The zipcode of the city to match")
-	cmd.Flags.ReqFloat64("minsalary", "", "The minimum salary to  use")
-	cmd.Flags.ReqArgs("experience", "", []string{"min", "max"},
+	cmd.Options.ReqInt64("id", "", "The ID of the user to show")
+	cmd.Options.ReqString("city", "", "The name of the city")
+	cmd.Options.ReqBool("admin", "", "Include admins in the result")
+	cmd.Options.ReqUint64("zipcode", "", "The zipcode of the city to match")
+	cmd.Options.ReqFloat64("minsalary", "", "The minimum salary to  use")
+	cmd.Options.ReqArgs("experience", "", []string{"min", "max"},
 		"The <min years> <max years> years of experience")
 
 	//Verify all parsed args
-	args := m.getCmdFlags(cmd)
+	args := m.getCmdOptions(cmd)
 	verify := func(name string, expected string) {
 		v, ok := args[name]
 		if !ok || v != expected {
@@ -50,39 +50,39 @@ func TestInvalid(t *testing.T) {
 	cmd.Name = "show"
 	cmd.Prefix = "box user"
 	cmd.Help = "Show user name"
-	cmd.Flags.ReqInt64("id", "", "The ID of the user to show")
-	cmd.Flags.ReqString("city", "", "The name of the city")
+	cmd.Options.ReqInt64("id", "", "The ID of the user to show")
+	cmd.Options.ReqString("city", "", "The name of the city")
 
-	args := m.getCmdFlags(cmd)
+	args := m.getCmdOptions(cmd)
 	if len(args) != 0 {
-		t.Errorf("getCmdFlags should have return no args")
+		t.Errorf("getCmdOptions should have return no args")
 	}
 
 	//Missing city flag arg
 	m.args = []string{"id", "3", "city"}
-	args = m.getCmdFlags(cmd)
+	args = m.getCmdOptions(cmd)
 	if len(args) != 0 {
-		t.Errorf("getCmdFlags should have return no args")
+		t.Errorf("getCmdOptions should have return no args")
 	}
 
 	//Invalid flag
 	m.args = []string{"id", "3", "invalidflag", "invaliddarg"}
-	args = m.getCmdFlags(cmd)
+	args = m.getCmdOptions(cmd)
 	if len(args) != 0 {
-		t.Errorf("getCmdFlags should have return no args")
+		t.Errorf("getCmdOptions should have return no args")
 	}
 
 	//Invalid number of args
-	cmd.Flags.ReqArgs("experience", "", []string{"min", "max"},
+	cmd.Options.ReqArgs("experience", "", []string{"min", "max"},
 		"The <min years> <max years> years of experience")
 	m.args = []string{"id", "3", "", "3"}
-	args = m.getCmdFlags(cmd)
+	args = m.getCmdOptions(cmd)
 	if len(args) != 0 {
-		t.Errorf("getCmdFlags should have return no args")
+		t.Errorf("getCmdOptions should have return no args")
 	}
 
-	ret := m.useFlags(nil, nil)
+	ret := m.useOptions(nil, nil)
 	if len(ret) != 0 {
-		t.Errorf("useFlags should have return no args")
+		t.Errorf("useOptions should have return no args")
 	}
 }

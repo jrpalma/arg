@@ -11,13 +11,13 @@ type model struct {
 	args []string
 }
 
-func (m *model) getCmdFlags(cmd *Cmd) map[string]string {
-	allFlags := cmd.Flags.getFlags()
-	cmdFlags := make(map[string]string)
+func (m *model) getCmdOptions(cmd *Cmd) map[string]string {
+	allOptions := cmd.Options.getOptions()
+	cmdOptions := make(map[string]string)
 	missing := make(map[string]struct{})
 
-	for name, flag := range allFlags {
-		if flag.req {
+	for name, option := range allOptions {
+		if option.required {
 			missing[name] = struct{}{}
 		}
 	}
@@ -30,21 +30,21 @@ func (m *model) getCmdFlags(cmd *Cmd) map[string]string {
 			return nil
 		}
 
-		flag, isFlag := allFlags[name]
-		if !isFlag || flag == nil {
+		option, isOption := allOptions[name]
+		if !isOption || option == nil {
 			return nil
 		}
 
 		args := m.args[i+1:]
-		usedFlags := m.useFlags(flag, args)
-		usedFlagsLen := len(usedFlags)
+		usedOptions := m.useOptions(option, args)
+		usedOptionsLen := len(usedOptions)
 
-		if usedFlagsLen == 0 {
+		if usedOptionsLen == 0 {
 			return nil
 		}
 
-		cmdFlags[name] = strings.Join(usedFlags, ",")
-		i = i + usedFlagsLen + 1
+		cmdOptions[name] = strings.Join(usedOptions, ",")
+		i = i + usedOptionsLen + 1
 		delete(missing, name)
 	}
 
@@ -52,10 +52,10 @@ func (m *model) getCmdFlags(cmd *Cmd) map[string]string {
 		return nil
 	}
 
-	return cmdFlags
+	return cmdOptions
 }
 
-func (m *model) useFlags(f *flag, args []string) []string {
+func (m *model) useOptions(f *option, args []string) []string {
 	var used []string
 	argsLen := len(args)
 
@@ -65,28 +65,28 @@ func (m *model) useFlags(f *flag, args []string) []string {
 
 	value := args[0]
 
-	if f.typ == stringFlag || f.typ == enumFlag {
+	if f.optionType == stringOption || f.optionType == enumOption {
 		used = append(used, value)
 		return used
-	} else if f.typ == boolFlag {
+	} else if f.optionType == boolOption {
 		if _, err := strconv.ParseBool(value); err == nil {
 			used = append(used, value)
 		}
-	} else if f.typ == int64Flag {
+	} else if f.optionType == int64Option {
 		if _, err := strconv.ParseInt(value, 0, 64); err == nil {
 			used = append(used, value)
 		}
-	} else if f.typ == uint64Flag {
+	} else if f.optionType == uint64Option {
 		if _, err := strconv.ParseUint(value, 0, 64); err == nil {
 			used = append(used, value)
 		}
-	} else if f.typ == float64Flag {
+	} else if f.optionType == float64Option {
 		if _, err := strconv.ParseFloat(value, 64); err == nil {
 			used = append(used, value)
 		}
-	} else if f.typ == argsFlag {
-		if len(f.names) <= argsLen {
-			for i := 0; i < len(f.names); i++ {
+	} else if f.optionType == argsOption {
+		if len(f.args) <= argsLen {
+			for i := 0; i < len(f.args); i++ {
 				used = append(used, args[i])
 			}
 		}

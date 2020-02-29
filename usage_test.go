@@ -22,7 +22,7 @@ var users = []User{
 func ShowUser(args ExecArgs) error {
 	var id int64
 
-	if !args.GetFlag("-id", &id) {
+	if !args.GetOption("-id", &id) {
 		return fmt.Errorf("Expected uint64 -id flag")
 	}
 
@@ -37,7 +37,7 @@ func ShowUser(args ExecArgs) error {
 func DisableUser(args ExecArgs) error {
 	var id int64
 
-	if !args.GetFlag("-id", &id) {
+	if !args.GetOption("-id", &id) {
 		return fmt.Errorf("Expected uint64 -id flag")
 	}
 	for i := range users {
@@ -59,7 +59,7 @@ func Example_usage() {
 		Help:   "Displays all the users",
 		Exec:   ShowUser,
 	}
-	showCmd.Flags.ReqInt64("-id", "", "The user ID to be shown")
+	showCmd.Options.ReqInt64("-id", "", "The user ID to be shown")
 
 	disableCmd := &Cmd{
 		Prefix: "users",
@@ -67,7 +67,7 @@ func Example_usage() {
 		Help:   "Disables a user by the given ID",
 		Exec:   DisableUser,
 	}
-	disableCmd.Flags.ReqInt64("-id", "", "The user ID to be disabled")
+	disableCmd.Options.ReqInt64("-id", "", "The user ID to be disabled")
 
 	//The parser can have a nil output writer.
 	//We could use os.Stdout, but that will
