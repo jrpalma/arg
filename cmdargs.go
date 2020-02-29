@@ -16,14 +16,14 @@ const (
 	Float64Arg
 )
 
-// CmdArgSet represents the set of command arguments
-type CmdArgSet struct {
+// CmdArgs represents the set of command arguments
+type CmdArgs struct {
 	args []CmdArgType
 }
 
-// SetTypes sets the type of arguments used by a command.
+// Types sets the type of arguments used by a command.
 // Valid types are: StringArg, BoolArg, Int64Arg, Uint64Arg, and Float64Arg.
-func (cas *CmdArgSet) SetTypes(types ...CmdArgType) {
+func (cas *CmdArgs) Types(types ...CmdArgType) {
 	for _, argType := range types {
 		cas.args = append(cas.args, argType)
 	}

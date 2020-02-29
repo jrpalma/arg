@@ -19,5 +19,5 @@ type Cmd struct {
 	// The command's flags. Flags can be required or optional.
 	Flags FlagSet
 	// The command's arguments. Commands can have zero or more arguments.
-	Args CmdArgSet
+	Args CmdArgs
 }

@@ -4,9 +4,9 @@ import (
 	"testing"
 )
 
-func TestCmdArgSet(t *testing.T) {
-	args := CmdArgSet{}
-	args.SetTypes(StringArg, BoolArg)
+func TestCmdArgs(t *testing.T) {
+	args := CmdArgs{}
+	args.Types(StringArg, BoolArg)
 
 	if len(args.args) != 2 {
 		t.Errorf("There should be 2 args: %#v", args.args)
