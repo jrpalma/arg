@@ -17,7 +17,7 @@ func (m *model) getCmdFlags(cmd *Cmd) map[string]string {
 	missing := make(map[string]struct{})
 
 	for name, flag := range allFlags {
-		if flag.Required() {
+		if flag.req {
 			missing[name] = struct{}{}
 		}
 	}
@@ -65,28 +65,28 @@ func (m *model) useFlags(f *flag, args []string) []string {
 
 	value := args[0]
 
-	if f.Type() == stringFlag || f.Type() == enumFlag {
+	if f.typ == stringFlag || f.typ == enumFlag {
 		used = append(used, value)
 		return used
-	} else if f.Type() == boolFlag {
+	} else if f.typ == boolFlag {
 		if _, err := strconv.ParseBool(value); err == nil {
 			used = append(used, value)
 		}
-	} else if f.Type() == int64Flag {
+	} else if f.typ == int64Flag {
 		if _, err := strconv.ParseInt(value, 0, 64); err == nil {
 			used = append(used, value)
 		}
-	} else if f.Type() == uint64Flag {
+	} else if f.typ == uint64Flag {
 		if _, err := strconv.ParseUint(value, 0, 64); err == nil {
 			used = append(used, value)
 		}
-	} else if f.Type() == float64Flag {
+	} else if f.typ == float64Flag {
 		if _, err := strconv.ParseFloat(value, 64); err == nil {
 			used = append(used, value)
 		}
-	} else if f.Type() == argsFlag {
-		if f.Count() <= uint(argsLen) {
-			for i := uint(0); i < f.Count(); i++ {
+	} else if f.typ == argsFlag {
+		if len(f.names) <= argsLen {
+			for i := 0; i < len(f.names); i++ {
 				used = append(used, args[i])
 			}
 		}
