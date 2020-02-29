@@ -151,17 +151,17 @@ func (p *Parser) cmdUsage(pfx *prefix, cmd *Cmd) {
 	headLine := fmt.Sprintf("%v %v", pfx.str, cmd.Name)
 
 	for _, flag := range allFlags {
-		if flag.Required() {
-			reqFlags[flag.Name()] = flag
+		if flag.req {
+			reqFlags[flag.name] = flag
 		} else {
-			optFlags[flag.Name()] = flag
+			optFlags[flag.name] = flag
 		}
 	}
 
 	for _, reqFlagName := range p.sortedFlags(reqFlags) {
 		reqFlag := reqFlags[reqFlagName]
-		headLine += fmt.Sprintf(" %v", reqFlag.Name())
-		flagHelp += fmt.Sprintf("\t%v: %v", reqFlag.Name(), reqFlag.Help())
+		headLine += fmt.Sprintf(" %v", reqFlag.name)
+		flagHelp += fmt.Sprintf("\t%v: %v", reqFlag.name, reqFlag.help)
 	}
 
 	if len(optFlags) > 0 {
@@ -169,7 +169,7 @@ func (p *Parser) cmdUsage(pfx *prefix, cmd *Cmd) {
 		headLine += fmt.Sprintf(" [%v]", strings.Join(keys, " "))
 		for _, optFlagName := range p.sortedFlags(optFlags) {
 			optFlag := optFlags[optFlagName]
-			flagHelp += fmt.Sprintf("\t%v: %v\n", optFlag.Name(), optFlag.Help())
+			flagHelp += fmt.Sprintf("\t%v: %v\n", optFlag.name, optFlag.help)
 		}
 	}
 

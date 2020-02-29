@@ -75,51 +75,51 @@ func TestCmdFlagSet(t *testing.T) {
 	fs := getCmdFlagSet()
 
 	f, _ := fs.kvp["rs"]
-	if f.Type() != stringFlag {
+	if f.typ != stringFlag {
 		t.Errorf("Flag is incorrect type")
 	}
 	f, _ = fs.kvp["rb"]
-	if f.Type() != boolFlag {
+	if f.typ != boolFlag {
 		t.Errorf("Flag is incorrect type")
 	}
 	f, _ = fs.kvp["ri64"]
-	if f.Type() != int64Flag {
+	if f.typ != int64Flag {
 		t.Errorf("Flag is incorrect type")
 	}
 	f, _ = fs.kvp["rui64"]
-	if f.Type() != uint64Flag {
+	if f.typ != uint64Flag {
 		t.Errorf("Flag is incorrect type")
 	}
 	f, _ = fs.kvp["rf64"]
-	if f.Type() != float64Flag {
+	if f.typ != float64Flag {
 		t.Errorf("Flag is incorrect type")
 	}
 	f, _ = fs.kvp["renum"]
-	if f.Type() != enumFlag {
+	if f.typ != enumFlag {
 		t.Errorf("Flag is incorrect type")
 	}
 	f, _ = fs.kvp["os"]
-	if f.Type() != stringFlag {
+	if f.typ != stringFlag {
 		t.Errorf("Flag is incorrect type")
 	}
 	f, _ = fs.kvp["ob"]
-	if f.Type() != boolFlag {
+	if f.typ != boolFlag {
 		t.Errorf("Flag is incorrect type")
 	}
 	f, _ = fs.kvp["oi64"]
-	if f.Type() != int64Flag {
+	if f.typ != int64Flag {
 		t.Errorf("Flag is incorrect type")
 	}
 	f, _ = fs.kvp["oui64"]
-	if f.Type() != uint64Flag {
+	if f.typ != uint64Flag {
 		t.Errorf("Flag is incorrect type")
 	}
 	f, _ = fs.kvp["of64"]
-	if f.Type() != float64Flag {
+	if f.typ != float64Flag {
 		t.Errorf("Flag is incorrect type")
 	}
 	f, _ = fs.kvp["oenum"]
-	if f.Type() != enumFlag {
+	if f.typ != enumFlag {
 		t.Errorf("Flag is incorrect type")
 	}
 }
@@ -133,13 +133,13 @@ func getCmdFlagSet() *CmdFlagSet {
 	fs.ReqFloat64("rf64", "", "rf64")
 	fs.ReqEnum("renum", "", []string{"e", "n", "u", "m"}, "renum")
 
-	fs.ReqArgs("rags", "", 3, "rags")
+	fs.ReqArgs("rags", "", []string{"a", "b"}, "rags")
 	fs.OptString("os", "", "os")
 	fs.OptBool("ob", "", "ob")
 	fs.OptInt64("oi64", "", "oi64")
 	fs.OptUint64("oui64", "", "oui64")
 	fs.OptFloat64("of64", "", "of64")
 	fs.OptEnum("oenum", "", []string{"e", "n", "u", "m"}, "oenum")
-	fs.OptArgs("oags", "", 3, "oags")
+	fs.OptArgs("oags", "", []string{"a", "b"}, "oags")
 	return fs
 }

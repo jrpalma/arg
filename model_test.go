@@ -19,7 +19,8 @@ func TestAllRequired(t *testing.T) {
 	cmd.Flags.ReqBool("admin", "", "Include admins in the result")
 	cmd.Flags.ReqUint64("zipcode", "", "The zipcode of the city to match")
 	cmd.Flags.ReqFloat64("minsalary", "", "The minimum salary to  use")
-	cmd.Flags.ReqArgs("experience", "", 2, "The <min years> <max years> years of experience")
+	cmd.Flags.ReqArgs("experience", "", []string{"min", "max"},
+		"The <min years> <max years> years of experience")
 
 	//Verify all parsed args
 	args := m.getCmdFlags(cmd)
@@ -72,7 +73,8 @@ func TestInvalid(t *testing.T) {
 	}
 
 	//Invalid number of args
-	cmd.Flags.ReqArgs("experience", "", 2, "The <min years> <max years> years of experience")
+	cmd.Flags.ReqArgs("experience", "", []string{"min", "max"},
+		"The <min years> <max years> years of experience")
 	m.args = []string{"id", "3", "", "3"}
 	args = m.getCmdFlags(cmd)
 	if len(args) != 0 {
