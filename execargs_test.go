@@ -50,7 +50,7 @@ func TestGetArg(t *testing.T) {
 	}
 }
 
-func TestGetOption(t *testing.T) {
+func TestGetFlag(t *testing.T) {
 	var s string
 	var b bool
 	var i64 int64
@@ -63,53 +63,53 @@ func TestGetOption(t *testing.T) {
 	var sui64 []uint64
 	var invalid *execargs
 
-	opts := make(map[string]string)
-	opts["string"] = "string"
-	opts["bool"] = "true"
-	opts["int64"] = "-3"
-	opts["uint64"] = "3"
-	opts["float64"] = "3.0"
-	opts["enum"] = "enabled"
-	opts["args"] = "1 2"
-	opts["sf64"] = "3.0 2.0"
-	opts["si64"] = "3 -2"
-	opts["sui64"] = "3 2"
-	ca := &execargs{options: opts}
+	flags := make(map[string]string)
+	flags["string"] = "string"
+	flags["bool"] = "true"
+	flags["int64"] = "-3"
+	flags["uint64"] = "3"
+	flags["float64"] = "3.0"
+	flags["enum"] = "enabled"
+	flags["args"] = "1 2"
+	flags["sf64"] = "3.0 2.0"
+	flags["si64"] = "3 -2"
+	flags["sui64"] = "3 2"
+	ca := &execargs{flags: flags}
 
-	if !ca.GetOption("string", &s) {
+	if !ca.GetFlag("string", &s) {
 		t.Errorf("Failed to get arg string")
 	}
-	if !ca.GetOption("bool", &b) {
+	if !ca.GetFlag("bool", &b) {
 		t.Errorf("Failed to get arg bool")
 	}
-	if !ca.GetOption("int64", &i64) {
+	if !ca.GetFlag("int64", &i64) {
 		t.Errorf("Failed to get arg int64")
 	}
-	if !ca.GetOption("uint64", &ui64) {
+	if !ca.GetFlag("uint64", &ui64) {
 		t.Errorf("Failed to get arg uint64")
 	}
-	if !ca.GetOption("float64", &f64) {
+	if !ca.GetFlag("float64", &f64) {
 		t.Errorf("Failed to get arg float64")
 	}
-	if !ca.GetOption("enum", &e) {
+	if !ca.GetFlag("enum", &e) {
 		t.Errorf("Failed to get arg enum")
 	}
-	if !ca.GetOption("args", &slice) {
+	if !ca.GetFlag("args", &slice) {
 		t.Errorf("Failed to get arg slice")
 	}
-	if !ca.GetOption("sf64", &sf64) {
+	if !ca.GetFlag("sf64", &sf64) {
 		t.Errorf("Failed to get arg sf64")
 	}
-	if !ca.GetOption("si64", &si64) {
+	if !ca.GetFlag("si64", &si64) {
 		t.Errorf("Failed to get arg si64")
 	}
-	if !ca.GetOption("sui64", &sui64) {
+	if !ca.GetFlag("sui64", &sui64) {
 		t.Errorf("Failed to get arg sui64")
 	}
-	if ca.GetOption("sui64", &invalid) {
+	if ca.GetFlag("sui64", &invalid) {
 		t.Errorf("Failed to get arg sui64")
 	}
-	if ca.GetOption("unknown", nil) {
+	if ca.GetFlag("unknown", nil) {
 		t.Errorf("Get should failed")
 	}
 }

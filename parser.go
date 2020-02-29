@@ -69,7 +69,7 @@ func (p *Parser) Parse(exitOnError bool, args []string) error {
 	var cmd *Cmd
 	var prefix string
 	var models []model
-	var cmdOptions map[string]string
+	var cmdFlags map[string]string
 
 	if len(args) < 2 {
 		return ErrInvalidArgs
@@ -99,13 +99,13 @@ func (p *Parser) Parse(exitOnError bool, args []string) error {
 			continue
 		}
 
-		if len(model.args) == 0 && !match.Options.hasRequired() {
+		if len(model.args) == 0 && !match.Flags.hasReq() {
 			cmd = match
 			break
 		}
 
-		cmdOptions = model.getCmdOptions(match)
-		if len(cmdOptions) == 0 {
+		cmdFlags = model.getCmdFlags(match)
+		if len(cmdFlags) == 0 {
 			continue
 		}
 
@@ -121,7 +121,7 @@ func (p *Parser) Parse(exitOnError bool, args []string) error {
 		os.Exit(1)
 	}
 
-	err := cmd.Exec(&execargs{options: cmdOptions})
+	err := cmd.Exec(&execargs{flags: cmdFlags})
 	if err != nil {
 		p.print(err.Error())
 		if !exitOnError {
@@ -144,38 +144,38 @@ func (p *Parser) usage(exec string) {
 
 }
 func (p *Parser) cmdUsage(pfx *prefix, cmd *Cmd) {
-	optionHelp := ""
-	allOptions := cmd.Options.getOptions()
-	reqOptions := make(map[string]*option)
-	optOptions := make(map[string]*option)
+	flagHelp := ""
+	allFlags := cmd.Flags.getFlags()
+	reqFlags := make(map[string]*flag)
+	optFlags := make(map[string]*flag)
 	headLine := fmt.Sprintf("%v %v", pfx.str, cmd.Name)
 
-	for _, option := range allOptions {
-		if option.required {
-			reqOptions[option.name] = option
+	for _, flag := range allFlags {
+		if flag.req {
+			reqFlags[flag.name] = flag
 		} else {
-			optOptions[option.name] = option
+			optFlags[flag.name] = flag
 		}
 	}
 
-	for _, reqOptionName := range p.sortedOptions(reqOptions) {
-		reqOption := reqOptions[reqOptionName]
-		headLine += fmt.Sprintf(" %v", reqOption.name)
-		optionHelp += fmt.Sprintf("\t%v: %v", reqOption.name, reqOption.help)
+	for _, reqFlagName := range p.sortedFlags(reqFlags) {
+		reqFlag := reqFlags[reqFlagName]
+		headLine += fmt.Sprintf(" %v", reqFlag.name)
+		flagHelp += fmt.Sprintf("\t%v: %v", reqFlag.name, reqFlag.help)
 	}
 
-	if len(optOptions) > 0 {
-		keys := p.sortedOptions(optOptions)
+	if len(optFlags) > 0 {
+		keys := p.sortedFlags(optFlags)
 		headLine += fmt.Sprintf(" [%v]", strings.Join(keys, " "))
-		for _, optOptionName := range p.sortedOptions(optOptions) {
-			optOption := optOptions[optOptionName]
-			optionHelp += fmt.Sprintf("\t%v: %v\n", optOption.name, optOption.help)
+		for _, optFlagName := range p.sortedFlags(optFlags) {
+			optFlag := optFlags[optFlagName]
+			flagHelp += fmt.Sprintf("\t%v: %v\n", optFlag.name, optFlag.help)
 		}
 	}
 
 	p.print(headLine + "\n")
-	if optionHelp != "" {
-		p.print(optionHelp + "\n\n")
+	if flagHelp != "" {
+		p.print(flagHelp + "\n\n")
 	}
 }
 func (p *Parser) print(msg string, args ...interface{}) {
@@ -183,25 +183,25 @@ func (p *Parser) print(msg string, args ...interface{}) {
 		p.output.Write([]byte(fmt.Sprintf(msg, args...)))
 	}
 }
-func (p *Parser) sortedOptions(options map[string]*option) []string {
-	keys := make([]string, 0, len(options))
-	for key := range options {
+func (p *Parser) sortedFlags(flags map[string]*flag) []string {
+	keys := make([]string, 0, len(flags))
+	for key := range flags {
 		keys = append(keys, key)
 	}
 	sort.Strings(keys)
 	return keys
 }
-func (p *Parser) sortedPrefixes(options map[string]*prefix) []string {
-	keys := make([]string, 0, len(options))
-	for key := range options {
+func (p *Parser) sortedPrefixes(flags map[string]*prefix) []string {
+	keys := make([]string, 0, len(flags))
+	for key := range flags {
 		keys = append(keys, key)
 	}
 	sort.Strings(keys)
 	return keys
 }
-func (p *Parser) sortedCmds(options map[string]*Cmd) []string {
-	keys := make([]string, 0, len(options))
-	for key := range options {
+func (p *Parser) sortedCmds(flags map[string]*Cmd) []string {
+	keys := make([]string, 0, len(flags))
+	for key := range flags {
 		keys = append(keys, key)
 	}
 	sort.Strings(keys)
