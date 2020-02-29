@@ -17,7 +17,7 @@ type Cmd struct {
 	// The function that gets executed if the arguments match the command.
 	Exec func(ExecArgs) error
 	// The command's flags. Flags can be required or optional.
-	Flags CmdFlagSet
+	Flags FlagSet
 	// The command's arguments. Commands can have zero or more arguments.
 	Args CmdArgSet
 }
