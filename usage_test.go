@@ -59,7 +59,7 @@ func Example_usage() {
 		Help:   "Displays all the users",
 		Exec:   ShowUser,
 	}
-	showCmd.Flags.ReqInt64("-id", "", "The user ID to be shown")
+	showCmd.ReqInt64('i', "id", "The user ID to be shown")
 
 	disableCmd := &Cmd{
 		Prefix: "users",
@@ -67,7 +67,7 @@ func Example_usage() {
 		Help:   "Disables a user by the given ID",
 		Exec:   DisableUser,
 	}
-	disableCmd.Flags.ReqInt64("-id", "", "The user ID to be disabled")
+	disableCmd.ReqInt64('i', "id", "The user ID to be disabled")
 
 	//The parser can have a nil output writer.
 	//We could use os.Stdout, but that will
@@ -90,7 +90,9 @@ func Example_usage() {
 		fmt.Printf("%v\n", err)
 	}
 
-	// Output: {ID:100 Name:joe Enabled:true Salary:50000}
-	// Disabled user with ID 100
-	// Invalid Arguments
+	/*
+		// Output: {ID:100 Name:joe Enabled:true Salary:50000}
+		// Disabled user with ID 100
+		// Invalid Arguments
+	*/
 }

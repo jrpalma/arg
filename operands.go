@@ -18,17 +18,10 @@ const (
 
 // CmdArgs represents the set of command arguments
 type CmdArgs struct {
-	args []*cmdarg
 }
 
 // Add a command argument with the given name.
 // Valid types are: StringArg, BoolArg, Int64Arg, Uint64Arg, and Float64Arg.
-func (cas *CmdArgs) Add(name string, cmdArgType CmdArgType) {
-	cas.args = append(cas.args, &cmdarg{name: name, typ: cmdArgType})
+func (cas *CmdArgs) Add(name string, argType CmdArgType) {
 
-}
-
-type cmdarg struct {
-	name string
-	typ  CmdArgType
 }
