@@ -61,7 +61,7 @@ func (p *Parser) AddCmd(cmd *Cmd) {
 // cannot find a command to execute, or the command failed to
 // execute and returns a non nil error".
 //
-// A Parser's Parse function will return: "ErrInvalidARgs if the
+// A Parser's Parse function will return: "ErrInvalidArgs if the
 // parser cannot find a command to execute, or the command's
 // returned error"
 func (p *Parser) Parse(exitOnError bool, args []string) error {
