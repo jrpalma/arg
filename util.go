@@ -2,7 +2,6 @@ package arg
 
 import (
 	"strconv"
-	"strings"
 )
 
 func getBool(src string, dst interface{}) bool {
@@ -53,20 +52,12 @@ func getFloat64(src string, dst interface{}) bool {
 	*destination = parsedValue
 	return true
 }
-func getStringSlice(src string, dst interface{}, sep string) bool {
-	destination, correctType := dst.(*[]string)
-	if !correctType {
-		return false
-	}
-	*destination = strings.Split(src, sep)
-	return true
-}
-func getFloat64Slice(src string, dst interface{}, sep string) bool {
+func getFloat64Slice(src []string, dst interface{}) bool {
 	destination, correctType := dst.(*[]float64)
 	if !correctType {
 		return false
 	}
-	for _, item := range strings.Split(src, sep) {
+	for _, item := range src {
 		var value float64
 		if getFloat64(item, &value) {
 			*destination = append(*destination, value)
@@ -74,12 +65,12 @@ func getFloat64Slice(src string, dst interface{}, sep string) bool {
 	}
 	return true
 }
-func getInt64Slice(src string, dst interface{}, sep string) bool {
+func getInt64Slice(src []string, dst interface{}) bool {
 	destination, correctType := dst.(*[]int64)
 	if !correctType {
 		return false
 	}
-	for _, item := range strings.Split(src, sep) {
+	for _, item := range src {
 		var value int64
 		if getInt64(item, &value) {
 			*destination = append(*destination, value)
@@ -87,16 +78,23 @@ func getInt64Slice(src string, dst interface{}, sep string) bool {
 	}
 	return true
 }
-func getUint64Slice(src string, dst interface{}, sep string) bool {
+func getUint64Slice(src []string, dst interface{}) bool {
 	destination, correctType := dst.(*[]uint64)
 	if !correctType {
 		return false
 	}
-	for _, item := range strings.Split(src, sep) {
+	for _, item := range src {
 		var value uint64
 		if getUint64(item, &value) {
 			*destination = append(*destination, value)
 		}
 	}
 	return true
+}
+func getRunes(src string) []rune {
+	var runes []rune
+	for _, r := range src {
+		runes = append(runes, r)
+	}
+	return runes
 }

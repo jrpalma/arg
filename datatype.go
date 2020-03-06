@@ -4,8 +4,11 @@ package arg
 type DataType int
 
 const (
+	none DataType = iota
+	enum
+
 	// Bool boolean data type
-	Bool DataType = iota
+	Bool
 	// Int64 int64 data type
 	Int64
 	// Uint64 uint64 data type
@@ -14,6 +17,4 @@ const (
 	String
 	// Float64 float64 data type
 	Float64
-
-	enum
 )

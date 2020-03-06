@@ -1,6 +1,7 @@
 package arg
 
 import (
+	"strings"
 	"testing"
 )
 
@@ -64,26 +65,13 @@ func TestGetFloat64(t *testing.T) {
 		t.Errorf("Should not fail with vaild src and dst")
 	}
 }
-func TestGetStringSlice(t *testing.T) {
-	list := "1,2,3"
-	var dst []string
-	if getStringSlice(list, nil, ",") {
-		t.Errorf("Should fail with invalid dst")
-	}
-	if !getStringSlice(list, &dst, ",") {
-		t.Errorf("Should not fail with vaild src and dst")
-	}
-	if len(dst) != 3 {
-		t.Errorf("String slice should be of length 3")
-	}
-}
 func TestGetFloat64Slice(t *testing.T) {
-	list := "1,2,3"
+	list := strings.Split("1,2,3", ",")
 	var dst []float64
-	if getFloat64Slice(list, nil, ",") {
+	if getFloat64Slice(list, nil) {
 		t.Errorf("Should fail with invalid dst")
 	}
-	if !getFloat64Slice(list, &dst, ",") {
+	if !getFloat64Slice(list, &dst) {
 		t.Errorf("Should not fail with vaild src and dst")
 	}
 	if len(dst) != 3 {
@@ -91,12 +79,12 @@ func TestGetFloat64Slice(t *testing.T) {
 	}
 }
 func TestGetInt64Slice(t *testing.T) {
-	list := "1,2,3"
+	list := strings.Split("1,2,3", ",")
 	var dst []int64
-	if getInt64Slice(list, nil, ",") {
+	if getInt64Slice(list, nil) {
 		t.Errorf("Should fail with invalid dst")
 	}
-	if !getInt64Slice(list, &dst, ",") {
+	if !getInt64Slice(list, &dst) {
 		t.Errorf("Should not fail with vaild src and dst")
 	}
 	if len(dst) != 3 {
@@ -104,12 +92,12 @@ func TestGetInt64Slice(t *testing.T) {
 	}
 }
 func TestGetUint64Slice(t *testing.T) {
-	list := "1,2,3"
+	list := strings.Split("1,2,3", ",")
 	var dst []uint64
-	if getUint64Slice(list, nil, ",") {
+	if getUint64Slice(list, nil) {
 		t.Errorf("Should fail with invalid dst")
 	}
-	if !getUint64Slice(list, &dst, ",") {
+	if !getUint64Slice(list, &dst) {
 		t.Errorf("Should not fail with vaild src and dst")
 	}
 	if len(dst) != 3 {
