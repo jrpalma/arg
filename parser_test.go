@@ -101,7 +101,7 @@ func getShowCmd() *Cmd {
 				return fmt.Errorf("Invalid flag value must fail")
 			}
 			if !args.GetFlag("i", &i) {
-				return fmt.Errorf("ID flag must succeeed")
+				return fmt.Errorf("ID flag must succeed")
 			}
 			return nil
 		},

@@ -1,7 +1,5 @@
 package arg
 
-import ()
-
 // ExecArgs represent the flag arguments passed to
 // a Cmd's Exec function.
 type ExecArgs interface {
