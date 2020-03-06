@@ -6,79 +6,89 @@ import (
 	"testing"
 )
 
-func TestParser(t *testing.T) {
-
-	show := getShowCmd()
-	delete := getDelCmd()
-
-	//show.Option('h', "human", "Human format")
-	show.Option('a', "admin", "Include admin users")
-	show.ReqInt64('i', "id", "The ID of the user to be delted")
-	show.Operand(0, "department", String)
-
-	delete.ReqInt64('i', "id", "The ID of the user to be delted")
-
-	testParser := func(args []string) error {
-		output := &bytes.Buffer{}
-		parser := NewParser(output)
-		parser.AddCmd(show)
-		parser.AddCmd(delete)
-		return parser.Parse(false, args)
-	}
-
-	//Good call
-
-	err := testParser([]string{"a.out", "users", "show", "--admin", "--id", "3", "clothing"})
+func TestParserSlices(t *testing.T) {
+	searchCmd := getSearchCmd()
+	err := testCmd(searchCmd, []string{
+		"a.out", "search", "--include", "/boot", "--include=/home", "-I/root", "-I", "/opt"})
 	if err != nil {
 		t.Errorf("Parse failed: %v", err)
 	}
-	err = testParser([]string{"a.out", "users", "show", "-a", "-i", "3", "clothing"})
+}
+
+func TestParserPositive(t *testing.T) {
+	showCmd := getShowCmd()
+
+	err := testCmd(showCmd, []string{
+		"a.out", "users", "showCmd", "--admin", "--id", "3", "clothing"})
 	if err != nil {
-		t.Errorf("Failed to show: %v", err)
+		t.Errorf("Parse failed: %v", err)
 	}
-	err = testParser([]string{"a.out", "users", "show", "-ai3", "clothing"})
+	err = testCmd(showCmd, []string{
+		"a.out", "users", "showCmd", "-a", "-i", "3", "clothing"})
 	if err != nil {
-		t.Errorf("Failed to show: %v", err)
+		t.Errorf("Failed to showCmd: %v", err)
 	}
-	err = testParser([]string{"a.out", "users", "show", "-ai3", "clothing"})
+	err = testCmd(showCmd, []string{
+		"a.out", "users", "showCmd", "-ai3", "clothing"})
 	if err != nil {
-		t.Errorf("Failed to show: %v", err)
+		t.Errorf("Failed to showCmd: %v", err)
 	}
-	err = testParser([]string{"a.out", "users", "show", "-a", "--id=3", "clothing"})
+	err = testCmd(showCmd, []string{
+		"a.out", "users", "showCmd", "-ai3", "clothing"})
 	if err != nil {
-		t.Errorf("Failed to show: %v", err)
+		t.Errorf("Failed to showCmd: %v", err)
 	}
-	//Bad call
-	err = testParser([]string{"a.out", "users", "show", "-t"})
+	err = testCmd(showCmd, []string{
+		"a.out", "users", "showCmd", "-a", "--id=3", "clothing"})
+	if err != nil {
+		t.Errorf("Failed to showCmd: %v", err)
+	}
+}
+
+func TestParserNegative(t *testing.T) {
+
+	showCmd := getShowCmd()
+	deleteCmd := getDelCmd()
+
+	err := testCmd(showCmd, []string{"a.out", "users", "showCmd", "-t"})
 	if err == nil {
 		t.Errorf("Should fail with -t option")
 	}
-	err = testParser([]string{"a.out", "users", "show", "--table"})
+	err = testCmd(showCmd, []string{"a.out", "users", "showCmd", "--table"})
 	if err == nil {
 		t.Errorf("Should fail with -t option")
 	}
-	err = testParser([]string{"a.out", "users", "show", "-"})
+	err = testCmd(showCmd, []string{"a.out", "users", "showCmd", "-"})
 	if err == nil {
 		t.Errorf("Should fail with dash")
 	}
-	err = testParser([]string{"a.out", "users", "bad"})
+	err = testCmd(showCmd, []string{"a.out", "users", "bad"})
 	if err == nil {
 		t.Errorf("Should fail with bad command")
 	}
-	err = testParser([]string{"a.out"})
+	err = testCmd(showCmd, []string{"a.out"})
 	if err == nil {
 		t.Errorf("Should fail with no args")
 	}
-	err = testParser([]string{"a.out", "users", "delete", "-i3"})
+	err = testCmd(showCmd, []string{
+		"a.out", "users", "showCmd", "--admin", "--id", "3"})
+	if err == nil {
+		t.Errorf("Parse should fail with invalid deparment")
+	}
+	err = testCmd(deleteCmd, []string{"a.out", "users", "delete", "-i3"})
+	if err == nil {
+		t.Errorf("Delete must fail")
+	}
+	err = testCmd(deleteCmd, []string{"a.out", "users", "delete"})
 	if err == nil {
 		t.Errorf("Delete must fail")
 	}
 }
 
 func getShowCmd() *Cmd {
-	show := &Cmd{
+	showCmd := &Cmd{
 		Prefix: "users",
-		Name:   "show",
+		Name:   "showCmd",
 		Help:   "Show users",
 		Exec: func(args ExecArgs) error {
 			var i int64
@@ -106,11 +116,14 @@ func getShowCmd() *Cmd {
 			return nil
 		},
 	}
+	showCmd.Option('a', "admin", "Include admin users")
+	showCmd.ReqInt64('i', "id", "The ID of the user to be delted")
+	showCmd.Operand(0, "department", String)
 
-	return show
+	return showCmd
 }
 func getDelCmd() *Cmd {
-	delete := &Cmd{
+	deleteCmd := &Cmd{
 		Prefix: "users",
 		Name:   "delete",
 		Help:   "Deletes a user",
@@ -118,5 +131,33 @@ func getDelCmd() *Cmd {
 			return fmt.Errorf("Delete must fail")
 		},
 	}
-	return delete
+	deleteCmd.ReqInt64('i', "id", "The ID of the user to be delted")
+	return deleteCmd
+}
+func getSearchCmd() *Cmd {
+	searchCmd := &Cmd{
+		Prefix: "",
+		Name:   "search",
+		Help:   "Search files",
+		Exec: func(args ExecArgs) error {
+			var boot string
+			var all []string
+			if !args.GetFlag("I", &boot) && boot != "/boot" {
+				return fmt.Errorf("Invalid first flag value %v", &boot)
+			}
+			if !args.GetFlag("I", &all) && len(all) != 4 {
+				return fmt.Errorf("Invalid flag values %#v", all)
+			}
+			return nil
+		},
+	}
+	searchCmd.OptString('I', "include", "Directories to include")
+	return searchCmd
+}
+
+func testCmd(cmd *Cmd, args []string) error {
+	output := &bytes.Buffer{}
+	parser := NewParser(output)
+	parser.AddCmd(cmd)
+	return parser.Parse(false, args)
 }
