@@ -4,10 +4,6 @@ import (
 	"strings"
 )
 
-type argValue interface {
-	getOptions() ([]option, error)
-}
-
 func newPosixArg(value string, cmd *Cmd) *posixArg {
 	return &posixArg{runes: getRunes(value), cmd: cmd}
 }
@@ -41,11 +37,12 @@ func (as *posixArg) getLongOption() ([]option, error) {
 		return nil, ErrInvalidArgs
 	}
 
-	//Check for argument
 	opt.long = tokens[0]
 	opt.short = cmdOpt.short
 	opt.dataType = cmdOpt.dataType
 	opt.required = cmdOpt.required
+
+	//Check for argument
 	if len(tokens) > 1 {
 		opt.arg = tokens[1]
 	}

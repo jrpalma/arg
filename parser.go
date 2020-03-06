@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"sort"
 )
 
 // ErrInvalidArgs Error to signal invalid arguments
@@ -89,6 +90,7 @@ func (p *Parser) Parse(exitOnError bool, args []string) error {
 
 		execArgs, err = model.parseArgs(match)
 		if err != nil {
+			p.cmdHelp(execName, pfx.str, match)
 			return err
 		}
 
@@ -130,11 +132,114 @@ func (p *Parser) getModels(execArgs []string) []model {
 
 	return models
 }
-func (p *Parser) usage(execName string) {
+func (p *Parser) usageOpts(cmd *Cmd) {
+	var maxWidth int
+	var optLine []string
+	var optHelp []string
 
+	longOptions := cmd.longOptions()
+	shortOptions := cmd.sortedShortOptions()
+	for _, shortOpt := range shortOptions {
+		str := "  -" + string(shortOpt.short)
+		if shortOpt.long != "" {
+			delete(longOptions, shortOpt.long)
+			str += ", --" + shortOpt.long
+		}
+		if len(str) > maxWidth {
+			maxWidth = len(str)
+		}
+		optLine = append(optLine, str)
+		optHelp = append(optHelp, shortOpt.help)
+	}
+	for i := range optLine {
+		line := optLine[i]
+		help := optHelp[i]
+		widthFmt := fmt.Sprintf("%%-%dv%%v\n", maxWidth+2)
+		p.print(widthFmt, line, help)
+	}
+
+	p.usageLong(longOptions)
+}
+func (p *Parser) usageLong(long map[string]*option) {
+	var maxWidth int
+	var names []string
+	var optLine []string
+	var optHelp []string
+
+	for k := range long {
+		names = append(names, k)
+	}
+	sort.Strings(names)
+
+	for _, name := range names {
+		str := ""
+		longOpt := long[name]
+
+		if longOpt.short == 0 && longOpt.long != "" {
+			str += fmt.Sprintf("--%v", longOpt.long)
+		}
+
+		if len(str) > maxWidth {
+			maxWidth = len(str)
+		}
+
+		optLine = append(optLine, str)
+		optHelp = append(optHelp, longOpt.help)
+	}
+	for i := range optLine {
+		line := optLine[i]
+		help := optHelp[i]
+		widthFmt := fmt.Sprintf("%%-%dv%%v\n", maxWidth+2)
+		p.print(widthFmt, line, help)
+	}
+}
+func (p *Parser) usage(execName string) {
+	p.print("Usage: %v <command>\n\n", execName)
+	p.print("Commands:\n")
+	for _, pfx := range p.sortedPrefixes() {
+		for _, cmd := range pfx.sortedCmds() {
+			p.cmdUsage(pfx.str, cmd)
+		}
+	}
+}
+func (p *Parser) cmdUsage(pfx string, cmd *Cmd) {
+	usage := fmt.Sprintf(" %v %v [OPTIONS]", pfx, cmd.Name)
+	for _, op := range cmd.sortedOperands() {
+		usage += " " + op.name
+	}
+	usage += fmt.Sprintf("\n %v\n", cmd.Help)
+	p.print(usage)
+	p.usageOpts(cmd)
+
+}
+func (p *Parser) cmdHelp(execName string, pfx string, cmd *Cmd) {
+	msgFmt := "Usage: %v %v %v [OPTION]... "
+	usage := fmt.Sprintf(msgFmt, execName, pfx, cmd.Name)
+	for _, op := range cmd.sortedOperands() {
+		usage += " " + op.name
+	}
+	usage += fmt.Sprintf("\n  %v\n", cmd.Help)
+
+	p.print(usage)
+	p.usageOpts(cmd)
+}
+func (p *Parser) sortedPrefixes() []*prefix {
+	var pfxs []*prefix
+	var names []string
+	for name := range p.pfxs {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	for _, pfxName := range names {
+		if pfx, ok := p.pfxs[pfxName]; ok {
+			pfxs = append(pfxs, pfx)
+		}
+	}
+	return pfxs
 }
 func (p *Parser) print(msg string, args ...interface{}) {
 	if p.output != nil {
 		p.output.Write([]byte(fmt.Sprintf(msg, args...)))
+		//fmt.Printf(msg, args...)
 	}
 }

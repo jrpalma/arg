@@ -6,6 +6,45 @@ import (
 	"testing"
 )
 
+func TestUsage(t *testing.T) {
+	showCmd := getShowCmd()
+	showCmd.ReqString(0, "format", "The format to be used")
+	err := testCmd(showCmd, []string{
+		"a.out", "users", "showCmd", "--admin", "--id", "3"})
+	if err == nil {
+		t.Errorf("Parse should fail")
+	}
+}
+func TestNegativeOperands(t *testing.T) {
+	operCmd := getOperCmd()
+	err := testCmd(operCmd, []string{
+		"a.out", "oper", "string", "bad", "3", "3", "3.0"})
+	if err == nil {
+		t.Errorf("Parse should fail")
+	}
+
+	operCmd.Operand(6, "Float64", Float64)
+	err = testCmd(operCmd, []string{
+		"a.out", "oper", "string", "true", "3", "3", "3.0", "3.0"})
+	if err == nil {
+		t.Errorf("Parse should fail")
+	}
+
+	operCmd.Operand(5, "Float64", none)
+	err = testCmd(operCmd, []string{
+		"a.out", "oper", "string", "true", "3", "3", "3.0", "3.0", "3.0"})
+	if err == nil {
+		t.Errorf("Parse should fail")
+	}
+}
+func TestPositiveOperands(t *testing.T) {
+	operCmd := getOperCmd()
+	err := testCmd(operCmd, []string{
+		"a.out", "oper", "string", "true", "3", "3", "3.0"})
+	if err != nil {
+		t.Errorf("Parse failed: %v", err)
+	}
+}
 func TestParserSlices(t *testing.T) {
 	searchCmd := getSearchCmd()
 	err := testCmd(searchCmd, []string{
@@ -14,14 +53,13 @@ func TestParserSlices(t *testing.T) {
 		t.Errorf("Parse failed: %v", err)
 	}
 }
-
 func TestParserPositive(t *testing.T) {
 	showCmd := getShowCmd()
 
 	err := testCmd(showCmd, []string{
 		"a.out", "users", "showCmd", "--admin", "--id", "3", "clothing"})
 	if err != nil {
-		t.Errorf("Parse failed: %v", err)
+		t.Errorf("Failed to showCmd: %v", err)
 	}
 	err = testCmd(showCmd, []string{
 		"a.out", "users", "showCmd", "-a", "-i", "3", "clothing"})
@@ -154,7 +192,29 @@ func getSearchCmd() *Cmd {
 	searchCmd.OptString('I', "include", "Directories to include")
 	return searchCmd
 }
-
+func getOperCmd() *Cmd {
+	operCmd := &Cmd{
+		Prefix: "",
+		Name:   "oper",
+		Help:   "Test the operands",
+		Exec: func(args ExecArgs) error {
+			//Test some basic cases here
+			if args.GetFlag("", nil) {
+				return fmt.Errorf("Should fail with empty")
+			}
+			if args.GetFlag("x", nil) {
+				return fmt.Errorf("Should fail with x option")
+			}
+			return nil
+		},
+	}
+	operCmd.Operand(0, "String", String)
+	operCmd.Operand(1, "Bool", Bool)
+	operCmd.Operand(2, "Int64", Int64)
+	operCmd.Operand(3, "Uint64", Uint64)
+	operCmd.Operand(4, "Float64", Float64)
+	return operCmd
+}
 func testCmd(cmd *Cmd, args []string) error {
 	output := &bytes.Buffer{}
 	parser := NewParser(output)

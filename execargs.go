@@ -25,7 +25,7 @@ type ExecArgs interface {
 
 type execArgs struct {
 	longFlags  map[string][]string
-	shortKeys  map[rune]string
+	shortFlags map[rune][]string
 	longOpts   map[string]struct{}
 	shortOpts  map[rune]struct{}
 	operValues map[int]string
@@ -34,7 +34,7 @@ type execArgs struct {
 func newExecArgs() *execArgs {
 	ea := &execArgs{}
 	ea.longFlags = make(map[string][]string)
-	ea.shortKeys = make(map[rune]string)
+	ea.shortFlags = make(map[rune][]string)
 	ea.longOpts = make(map[string]struct{})
 	ea.shortOpts = make(map[rune]struct{})
 	ea.operValues = make(map[int]string)
@@ -63,7 +63,7 @@ func (ea *execArgs) HasOption(name string) bool {
 
 func (ea *execArgs) addFlag(short rune, long string, value string) {
 	ea.longFlags[long] = append(ea.longFlags[long], value)
-	ea.shortKeys[short] = long
+	ea.shortFlags[short] = append(ea.shortFlags[short], value)
 }
 func (ea *execArgs) setOption(short rune, long string) {
 	ea.shortOpts[short] = struct{}{}
@@ -99,17 +99,25 @@ func (ea *execArgs) GetOperand(position int, val interface{}) bool {
 	return stat
 }
 func (ea *execArgs) GetFlag(name string, val interface{}) bool {
-
-	longKey := name
+	var flagExist bool
+	var flagValue []string
 	runes := getRunes(name)
 
-	if len(runes) == 1 {
-		longKey = ea.shortKeys[runes[0]]
+	if len(runes) == 0 {
+		return false
 	}
 
-	flagValue, flagExist := ea.longFlags[longKey]
-	if !flagExist {
-		return false
+	if len(runes) == 1 {
+		flagValue, flagExist = ea.shortFlags[runes[0]]
+		if !flagExist {
+			return false
+		}
+	}
+	if len(runes) > 1 {
+		flagValue, flagExist = ea.longFlags[name]
+		if !flagExist {
+			return false
+		}
 	}
 
 	var stat bool

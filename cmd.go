@@ -1,5 +1,9 @@
 package arg
 
+import (
+	"sort"
+)
+
 // Cmd represents a command that will be executed by a Parser.
 // The command's Exec method is executed if a Parser can match
 // the command's prefix, name, and flags.
@@ -19,7 +23,7 @@ type Cmd struct {
 	// The command's flags. Flags can be required or optional.
 
 	operands  map[int]*operand
-	shortOpts map[rune]string
+	shortOpts map[rune]*option
 	longOpts  map[string]*option
 }
 
@@ -136,10 +140,17 @@ func (c *Cmd) Operand(position int, name string, dataType DataType) {
 func (c *Cmd) addOption(o *option) {
 	if c.shortOpts == nil {
 		c.longOpts = make(map[string]*option)
-		c.shortOpts = make(map[rune]string)
+		c.shortOpts = make(map[rune]*option)
 	}
-	c.shortOpts[o.short] = o.long
-	c.longOpts[o.long] = o
+
+	//We will only add them to the command's
+	//options if they are not zero value
+	if o.short != 0 {
+		c.shortOpts[o.short] = o
+	}
+	if o.long != "" {
+		c.longOpts[o.long] = o
+	}
 }
 
 func (c *Cmd) longOption(name string) (*option, bool) {
@@ -150,21 +161,64 @@ func (c *Cmd) longOption(name string) (*option, bool) {
 }
 
 func (c *Cmd) shortOption(name rune) (*option, bool) {
-	if longName, ok := c.shortOpts[name]; ok {
-		o, exist := c.longOpts[longName]
-		return o, exist
-	}
-	return nil, false
+	o, ok := c.shortOpts[name]
+	return o, ok
 }
 
-func (c *Cmd) getRequiredLongNames() map[string]struct{} {
+func (c *Cmd) getRequiredNames() map[string]struct{} {
 	names := make(map[string]struct{})
 	for longName, opt := range c.longOpts {
 		if opt.required {
 			names[longName] = struct{}{}
 		}
 	}
+	for shortRune, opt := range c.shortOpts {
+		if opt.required {
+			names[string(shortRune)] = struct{}{}
+		}
+	}
 	return names
+}
+func (c *Cmd) longOptions() map[string]*option {
+	return c.longOpts
+}
+func (c *Cmd) sortedShortOptions() []*option {
+	var runes []rune
+	var names []string
+	var opts []*option
+	for _, name := range c.shortOpts {
+		names = append(names, string(name.short))
+	}
+
+	sort.Strings(names)
+	for _, name := range names {
+		rs := getRunes(name)
+		if len(rs) > 0 {
+			runes = append(runes, rs[0])
+		}
+	}
+
+	for _, short := range runes {
+		if opt, ok := c.shortOpts[short]; ok {
+			opts = append(opts, opt)
+		}
+	}
+
+	return opts
+}
+func (c *Cmd) sortedOperands() []*operand {
+	var pos []int
+	var ops []*operand
+	for p := range c.operands {
+		pos = append(pos, p)
+	}
+	sort.Ints(pos)
+	for p := range pos {
+		if op, ok := c.operands[p]; ok {
+			ops = append(ops, op)
+		}
+	}
+	return ops
 }
 
 func (c *Cmd) addOperand(o *operand) {

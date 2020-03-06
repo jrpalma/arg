@@ -1,6 +1,7 @@
 package arg
 
 import (
+	"sort"
 	"strings"
 )
 
@@ -52,4 +53,20 @@ func (p *prefix) addCmd(cmd *Cmd) {
 func (p *prefix) getCmd(name string) (*Cmd, bool) {
 	cmd, ok := p.cmds[name]
 	return cmd, ok
+}
+
+func (p *prefix) sortedCmds() []*Cmd {
+	var cmds []*Cmd
+	var names []string
+	for name := range p.cmds {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	for _, cmdName := range names {
+		if cmd, ok := p.cmds[cmdName]; ok {
+			cmds = append(cmds, cmd)
+		}
+
+	}
+	return cmds
 }
