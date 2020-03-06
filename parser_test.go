@@ -145,10 +145,10 @@ func getShowCmd() *Cmd {
 			if args.GetOperand(0, nil) {
 				return fmt.Errorf("Invalid position must fail")
 			}
-			if args.GetFlag("i", nil) {
+			if args.GetOption("i", nil) {
 				return fmt.Errorf("Invalid flag value must fail")
 			}
-			if !args.GetFlag("i", &i) {
+			if !args.GetOption("i", &i) {
 				return fmt.Errorf("ID flag must succeed")
 			}
 			return nil
@@ -180,10 +180,10 @@ func getSearchCmd() *Cmd {
 		Exec: func(args ExecArgs) error {
 			var boot string
 			var all []string
-			if !args.GetFlag("I", &boot) && boot != "/boot" {
+			if !args.GetOption("I", &boot) && boot != "/boot" {
 				return fmt.Errorf("Invalid first flag value %v", &boot)
 			}
-			if !args.GetFlag("I", &all) && len(all) != 4 {
+			if !args.GetOption("I", &all) && len(all) != 4 {
 				return fmt.Errorf("Invalid flag values %#v", all)
 			}
 			return nil
@@ -199,10 +199,10 @@ func getOperCmd() *Cmd {
 		Help:   "Test the operands",
 		Exec: func(args ExecArgs) error {
 			//Test some basic cases here
-			if args.GetFlag("", nil) {
+			if args.GetOption("", nil) {
 				return fmt.Errorf("Should fail with empty")
 			}
-			if args.GetFlag("x", nil) {
+			if args.GetOption("x", nil) {
 				return fmt.Errorf("Should fail with x option")
 			}
 			return nil

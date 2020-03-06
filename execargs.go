@@ -5,14 +5,14 @@ package arg
 type ExecArgs interface {
 	// HasOption returns true if the option given by name is set.
 	HasOption(name string) bool
-	// GetFlag gets the command flag value given by name.
+	// GetOption gets the command option parameter given by name.
 	// Value is passed as pointer and can be any
 	// of the following types: string, bool, int64
 	// uint64, float64, []string, []int64, []uint64,
 	// or []float64.
 	// Returns false if the flag name does not exist
 	// or if the value type cannot be used.
-	GetFlag(name string, value interface{}) bool
+	GetOption(name string, value interface{}) bool
 
 	// GetOperand gets command operand value given by index.
 	// Values are passed as pointers and can be any
@@ -98,7 +98,7 @@ func (ea *execArgs) GetOperand(position int, val interface{}) bool {
 	}
 	return stat
 }
-func (ea *execArgs) GetFlag(name string, val interface{}) bool {
+func (ea *execArgs) GetOption(name string, val interface{}) bool {
 	var flagExist bool
 	var flagValue []string
 	runes := getRunes(name)

@@ -46,7 +46,7 @@ func TestGetOperand(t *testing.T) {
 	}
 }
 
-func TestGetFlag(t *testing.T) {
+func TestGetOption(t *testing.T) {
 	var s string
 	var b bool
 	var i64 int64
@@ -71,40 +71,40 @@ func TestGetFlag(t *testing.T) {
 	ea.addFlag('i', "si64", "3 -2")
 	ea.addFlag('j', "sui64", "3 2")
 
-	if !ea.GetFlag("string", &s) {
+	if !ea.GetOption("string", &s) {
 		t.Errorf("Failed to get arg string")
 	}
-	if !ea.GetFlag("bool", &b) {
+	if !ea.GetOption("bool", &b) {
 		t.Errorf("Failed to get arg bool")
 	}
-	if !ea.GetFlag("int64", &i64) {
+	if !ea.GetOption("int64", &i64) {
 		t.Errorf("Failed to get arg int64")
 	}
-	if !ea.GetFlag("uint64", &ui64) {
+	if !ea.GetOption("uint64", &ui64) {
 		t.Errorf("Failed to get arg uint64")
 	}
-	if !ea.GetFlag("float64", &f64) {
+	if !ea.GetOption("float64", &f64) {
 		t.Errorf("Failed to get arg float64")
 	}
-	if !ea.GetFlag("enum", &e) {
+	if !ea.GetOption("enum", &e) {
 		t.Errorf("Failed to get arg enum")
 	}
-	if !ea.GetFlag("args", &slice) {
+	if !ea.GetOption("args", &slice) {
 		t.Errorf("Failed to get arg slice")
 	}
-	if !ea.GetFlag("sf64", &sf64) {
+	if !ea.GetOption("sf64", &sf64) {
 		t.Errorf("Failed to get arg sf64")
 	}
-	if !ea.GetFlag("si64", &si64) {
+	if !ea.GetOption("si64", &si64) {
 		t.Errorf("Failed to get arg si64")
 	}
-	if !ea.GetFlag("sui64", &sui64) {
+	if !ea.GetOption("sui64", &sui64) {
 		t.Errorf("Failed to get arg sui64")
 	}
-	if ea.GetFlag("sui64", &invalid) {
+	if ea.GetOption("sui64", &invalid) {
 		t.Errorf("Failed to get arg sui64")
 	}
-	if ea.GetFlag("unknown", nil) {
+	if ea.GetOption("unknown", nil) {
 		t.Errorf("Get should failed")
 	}
 }
