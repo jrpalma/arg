@@ -106,6 +106,10 @@ func (p *Parser) Parse(exitOnError bool, args []string) error {
 		os.Exit(1)
 	}
 
+	if cmd.Exec == nil {
+		return nil
+	}
+
 	err = cmd.Exec(execArgs)
 	if err != nil {
 		p.print(err.Error())
@@ -132,70 +136,9 @@ func (p *Parser) getModels(execArgs []string) []model {
 
 	return models
 }
-func (p *Parser) usageOpts(cmd *Cmd) {
-	var maxWidth int
-	var optLine []string
-	var optHelp []string
-
-	longOptions := cmd.longOptions()
-	shortOptions := cmd.sortedShortOptions()
-	for _, shortOpt := range shortOptions {
-		str := "  -" + string(shortOpt.short)
-		if shortOpt.long != "" {
-			delete(longOptions, shortOpt.long)
-			str += ", --" + shortOpt.long
-		}
-		if len(str) > maxWidth {
-			maxWidth = len(str)
-		}
-		optLine = append(optLine, str)
-		optHelp = append(optHelp, shortOpt.help)
-	}
-	for i := range optLine {
-		line := optLine[i]
-		help := optHelp[i]
-		widthFmt := fmt.Sprintf("%%-%dv%%v\n", maxWidth+2)
-		p.print(widthFmt, line, help)
-	}
-
-	p.usageLong(longOptions)
-}
-func (p *Parser) usageLong(long map[string]*option) {
-	var maxWidth int
-	var names []string
-	var optLine []string
-	var optHelp []string
-
-	for k := range long {
-		names = append(names, k)
-	}
-	sort.Strings(names)
-
-	for _, name := range names {
-		str := ""
-		longOpt := long[name]
-
-		if longOpt.short == 0 && longOpt.long != "" {
-			str += fmt.Sprintf("--%v", longOpt.long)
-		}
-
-		if len(str) > maxWidth {
-			maxWidth = len(str)
-		}
-
-		optLine = append(optLine, str)
-		optHelp = append(optHelp, longOpt.help)
-	}
-	for i := range optLine {
-		line := optLine[i]
-		help := optHelp[i]
-		widthFmt := fmt.Sprintf("%%-%dv%%v\n", maxWidth+2)
-		p.print(widthFmt, line, help)
-	}
-}
 func (p *Parser) usage(execName string) {
-	p.print("Usage: %v <command>\n\n", execName)
-	p.print("Commands:\n")
+	p.print("Usage:\n%v <command>\n\n", execName)
+	p.print("COMMANDS:\n")
 	for _, pfx := range p.sortedPrefixes() {
 		for _, cmd := range pfx.sortedCmds() {
 			p.cmdUsage(pfx.str, cmd)
@@ -203,25 +146,67 @@ func (p *Parser) usage(execName string) {
 	}
 }
 func (p *Parser) cmdUsage(pfx string, cmd *Cmd) {
-	usage := fmt.Sprintf(" %v %v [OPTIONS]", pfx, cmd.Name)
-	for _, op := range cmd.sortedOperands() {
-		usage += " " + op.name
+
+	var synopsis string
+	help := tab + tab + cmd.Help + nl + nl
+
+	if len(pfx) == 0 {
+		synopsis += tab + cmd.Name
+	} else if len(pfx) > 0 {
+		synopsis += tab + pfx + space + cmd.Name
 	}
-	usage += fmt.Sprintf("\n %v\n", cmd.Help)
-	p.print(usage)
-	p.usageOpts(cmd)
+	if cmd.hasOptions() {
+		synopsis += space + "[OPTIONS]..."
+	}
+	for _, op := range cmd.sortedOperands() {
+		synopsis += space + "<" + op.name + ">"
+	}
+
+	p.print(synopsis + nl + help)
 
 }
 func (p *Parser) cmdHelp(execName string, pfx string, cmd *Cmd) {
-	msgFmt := "Usage: %v %v %v [OPTION]... "
-	usage := fmt.Sprintf(msgFmt, execName, pfx, cmd.Name)
-	for _, op := range cmd.sortedOperands() {
-		usage += " " + op.name
-	}
-	usage += fmt.Sprintf("\n  %v\n", cmd.Help)
+	synopsis := "SYNOPSIS:" + nl + tab
+	help := "NAME:" + nl + tab + cmd.Help + nl
 
-	p.print(usage)
-	p.usageOpts(cmd)
+	if len(pfx) == 0 {
+		synopsis += execName + space + cmd.Name
+	} else if len(pfx) > 0 {
+		synopsis += execName + space + pfx + space + cmd.Name
+	}
+	if cmd.hasOptions() {
+		synopsis += space + "[OPTIONS]..."
+	}
+	for _, op := range cmd.sortedOperands() {
+		synopsis += space + "<" + op.name + ">"
+	}
+
+	p.print(help + nl + synopsis + nl + nl)
+	p.optsHelp(cmd)
+}
+func (p *Parser) optsHelp(cmd *Cmd) {
+
+	longOptions := cmd.longOptions()
+	shortOptions := cmd.sortedShortOptions()
+
+	p.print("OPTIONS:\n")
+	for _, shortOpt := range shortOptions {
+		str := tab + "-" + string(shortOpt.short)
+		if shortOpt.long != "" {
+			delete(longOptions, shortOpt.long)
+			str += ", --" + shortOpt.long
+		}
+		p.print(str + nl + tab + tab + shortOpt.help + nl + nl)
+	}
+	for _, longOpt := range longOptions {
+		str := tab
+		if longOpt.short != 0 {
+			str += "-" + string(longOpt.short) + ", "
+		}
+		str += "--" + longOpt.long
+		p.print(str + nl + tab + tab + longOpt.help + nl + nl)
+	}
+
 }
 func (p *Parser) sortedPrefixes() []*prefix {
 	var pfxs []*prefix
@@ -243,3 +228,9 @@ func (p *Parser) print(msg string, args ...interface{}) {
 		//fmt.Printf(msg, args...)
 	}
 }
+
+const (
+	space = " "
+	nl    = "\n"
+	tab   = "    "
+)

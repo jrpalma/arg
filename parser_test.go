@@ -6,7 +6,21 @@ import (
 	"testing"
 )
 
+func TestDebug(t *testing.T) {
+	cmd := &Cmd{Name: "name"}
+	cmd.Option('y', "verbose", "Verbose output")
+	err := testCmd(cmd, []string{"a.out", "name", "x"})
+	if err == nil {
+		t.Errorf("Command with no exec should not fail: %v", err)
+	}
+	err = testCmd(cmd, []string{"a.out", "x"})
+	if err == nil {
+		t.Errorf("Command with no exec should not fail: %v", err)
+	}
+}
+
 func TestUsage(t *testing.T) {
+
 	showCmd := getShowCmd()
 	showCmd.ReqString(0, "format", "The format to be used")
 	err := testCmd(showCmd, []string{
@@ -14,6 +28,7 @@ func TestUsage(t *testing.T) {
 	if err == nil {
 		t.Errorf("Parse should fail")
 	}
+
 }
 func TestNegativeOperands(t *testing.T) {
 	operCmd := getOperCmd()

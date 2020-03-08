@@ -24,6 +24,8 @@ type Cmd struct {
 	operands  map[int]*operand
 	shortOpts map[rune]*option
 	longOpts  map[string]*option
+	hasOpts   bool
+	hasOper   bool
 }
 
 // Option adds an option that does not required a parameter.
@@ -150,6 +152,7 @@ func (c *Cmd) OptEnum(short rune, long string, valid []string, help string) {
 // Bool, Int64, Uint64, and Float64
 func (c *Cmd) Operand(position int, name string, dataType DataType) {
 	c.addOperand(&operand{position: position, name: name, dataType: dataType})
+	c.hasOper = true
 }
 
 func (c *Cmd) addOption(o *option) {
@@ -157,6 +160,8 @@ func (c *Cmd) addOption(o *option) {
 		c.longOpts = make(map[string]*option)
 		c.shortOpts = make(map[rune]*option)
 	}
+
+	c.hasOpts = true
 
 	//We will only add them to the command's
 	//options if they are not zero value
@@ -208,7 +213,7 @@ func (c *Cmd) sortedShortOptions() []*option {
 	sort.Strings(names)
 	for _, name := range names {
 		rs := getRunes(name)
-		if len(rs) > 0 {
+		if len(rs) > 0 && rs[0] != 0 {
 			runes = append(runes, rs[0])
 		}
 	}
@@ -249,6 +254,13 @@ func (c *Cmd) getOperands() map[int]operand {
 		m[k] = *v
 	}
 	return m
+}
+
+func (c *Cmd) hasOptions() bool {
+	return c.hasOpts
+}
+func (c *Cmd) hasOperands() bool {
+	return c.hasOper
 }
 
 type option struct {
