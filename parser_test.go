@@ -126,7 +126,7 @@ func TestParserNegative(t *testing.T) {
 	err = testCmd(showCmd, []string{
 		"a.out", "users", "showCmd", "--admin", "--id", "3"})
 	if err == nil {
-		t.Errorf("Parse should fail with invalid deparment")
+		t.Errorf("Parse should fail with invalid department")
 	}
 	err = testCmd(deleteCmd, []string{"a.out", "users", "delete", "-i3"})
 	if err == nil {
