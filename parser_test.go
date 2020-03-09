@@ -30,7 +30,7 @@ func TestUsage(t *testing.T) {
 	}
 
 }
-func TestNegativeOperands(t *testing.T) {
+func TestNegativeArg(t *testing.T) {
 	operCmd := getOperCmd()
 	err := testCmd(operCmd, []string{
 		"a.out", "oper", "string", "bad", "3", "3", "3.0"})
@@ -38,16 +38,16 @@ func TestNegativeOperands(t *testing.T) {
 		t.Errorf("Parse should fail")
 	}
 
-	operCmd.Operand(6, "Float64", Float64)
+	operCmd.Float64Operand(6, "Float64")
 	err = testCmd(operCmd, []string{
 		"a.out", "oper", "string", "true", "3", "3", "3.0", "3.0"})
 	if err == nil {
 		t.Errorf("Parse should fail")
 	}
 
-	operCmd.Operand(5, "Float64", none)
+	operCmd.StringOperand(5, "Float64")
 	err = testCmd(operCmd, []string{
-		"a.out", "oper", "string", "true", "3", "3", "3.0", "3.0", "3.0"})
+		"a.out", "oper", "string", "true", "3", "3", "3.0", "3.0", "3.0", "3.0"})
 	if err == nil {
 		t.Errorf("Parse should fail")
 	}
@@ -171,7 +171,7 @@ func getShowCmd() *Cmd {
 	}
 	showCmd.Option('a', "admin", "Include admin users")
 	showCmd.ReqInt64('i', "id", "The ID of the user to be delted")
-	showCmd.Operand(0, "department", String)
+	showCmd.StringOperand(0, "department")
 
 	return showCmd
 }
@@ -223,11 +223,11 @@ func getOperCmd() *Cmd {
 			return nil
 		},
 	}
-	operCmd.Operand(0, "String", String)
-	operCmd.Operand(1, "Bool", Bool)
-	operCmd.Operand(2, "Int64", Int64)
-	operCmd.Operand(3, "Uint64", Uint64)
-	operCmd.Operand(4, "Float64", Float64)
+	operCmd.StringOperand(0, "String")
+	operCmd.BoolOperand(1, "Bool")
+	operCmd.Int64Operand(2, "Int64")
+	operCmd.Uint64Operand(3, "Uint64")
+	operCmd.Float64Operand(4, "Float64")
 	return operCmd
 }
 func testCmd(cmd *Cmd, args []string) error {

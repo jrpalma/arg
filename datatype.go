@@ -1,20 +1,14 @@
 package arg
 
 // DataType represent a data type
-type DataType int
+type dataType int
 
 const (
-	none DataType = iota
-	enum
-
-	// Bool boolean data type
-	Bool
-	// Int64 int64 data type
-	Int64
-	// Uint64 uint64 data type
-	Uint64
-	// String string data type
-	String
-	// Float64 float64 data type
-	Float64
+	typeNone dataType = iota
+	typeEnum
+	typeBool
+	typeInt64
+	typeUint64
+	typeString
+	typeFloat64
 )

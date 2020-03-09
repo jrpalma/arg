@@ -45,15 +45,15 @@ func TestOptCmd(t *testing.T) {
 func TestOperand(t *testing.T) {
 	c := &Cmd{}
 
-	c.Operand(1, "url", String)
-	c.Operand(2, "dir", String)
+	c.StringOperand(1, "url")
+	c.StringOperand(2, "dir")
 
 	if len(c.operands) != 2 {
 		t.Errorf("There should be 2 operands")
 	}
 
 	for _, op := range c.operands {
-		if op.dataType != String {
+		if op.dataType != typeString {
 			t.Errorf("Operand data type should be String")
 		}
 	}
