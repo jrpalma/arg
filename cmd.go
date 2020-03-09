@@ -15,9 +15,9 @@ type Cmd struct {
 	// If two commands with the same prefix and name are added
 	// to a Parser object, the later will replace the the earlier.
 	Name string
-	// The command's help string. The command will display the help
-	// if usage is displayed.
-	Help string
+	// The command's description. The description is used to render
+	// the command's help.
+	Description string
 	// The function that gets executed if the arguments match the command.
 	Exec func(ExecArgs) error
 
@@ -28,56 +28,56 @@ type Cmd struct {
 	hasOper   bool
 }
 
-// Option adds an option that does not required a parameter.
+// Option adds an option that does not require a parameter.
 // Short is a one letter option. Short is not used if '0'.
 // Long is the long name for the option. Long is not used if empty.
-// Help is displayed when the usage message is printed.
-func (c *Cmd) Option(short rune, long string, help string) {
-	c.addOption(&option{short: short, long: long, help: help})
+// The command's description used to render the command's help.
+func (c *Cmd) Option(short rune, long string, description string) {
+	c.addOption(&option{short: short, long: long, description: description})
 }
 
 // ReqString adds a required option with a string parameter.
 // Short is a one letter option. Short is not used if '0'.
 // Long is the long name for the option. Long is not used if empty.
-// Help is displayed when the usage message is printed.
-func (c *Cmd) ReqString(short rune, long string, help string) {
-	c.addOption(&option{short: short, long: long, help: help,
+// The command's description used to render the command's help.
+func (c *Cmd) ReqString(short rune, long string, description string) {
+	c.addOption(&option{short: short, long: long, description: description,
 		required: true, dataType: String})
 }
 
 // ReqBool adds a required option with a bool parameter.
 // Short is a one letter option. Short is not used if '0'.
 // Long is the long name for the option. Long is not used if empty.
-// Help is displayed when the usage message is printed.
-func (c *Cmd) ReqBool(short rune, long string, help string) {
-	c.addOption(&option{short: short, long: long, help: help,
+// The command's description used to render the command's help.
+func (c *Cmd) ReqBool(short rune, long string, description string) {
+	c.addOption(&option{short: short, long: long, description: description,
 		required: true, dataType: Bool})
 }
 
 // ReqInt64 adds a required option with a int64 parameter.
 // Short is a one letter option. Short is not used if '0'.
 // Long is the long name for the option. Long is not used if empty.
-// Help is displayed when the usage message is printed.
-func (c *Cmd) ReqInt64(short rune, long string, help string) {
-	c.addOption(&option{short: short, long: long, help: help,
+// The command's description used to render the command's help.
+func (c *Cmd) ReqInt64(short rune, long string, description string) {
+	c.addOption(&option{short: short, long: long, description: description,
 		required: true, dataType: Int64})
 }
 
 // ReqUint64 adds a required option with a uint64 parameter.
 // Short is a one letter option. Short is not used if '0'.
 // Long is the long name for the option. Long is not used if empty.
-// Help is displayed when the usage message is printed.
-func (c *Cmd) ReqUint64(short rune, long string, help string) {
-	c.addOption(&option{short: short, long: long, help: help,
+// The command's description used to render the command's help.
+func (c *Cmd) ReqUint64(short rune, long string, description string) {
+	c.addOption(&option{short: short, long: long, description: description,
 		required: true, dataType: Uint64})
 }
 
 // ReqFloat64 adds a required option with a float64 parameter.
 // Short is a one letter option. Short is not used if '0'.
 // Long is the long name for the option. Long is not used if empty.
-// Help is displayed when the usage message is printed.
-func (c *Cmd) ReqFloat64(short rune, long string, help string) {
-	c.addOption(&option{short: short, long: long, help: help,
+// The command's description used to render the command's help.
+func (c *Cmd) ReqFloat64(short rune, long string, description string) {
+	c.addOption(&option{short: short, long: long, description: description,
 		required: true, dataType: Float64})
 }
 
@@ -85,54 +85,54 @@ func (c *Cmd) ReqFloat64(short rune, long string, help string) {
 // that are acceped by this option.
 // Short is a one letter option. Short is not used if '0'.
 // Long is the long name for the option. Long is not used if empty.
-// Help is displayed when the usage message is printed.
-func (c *Cmd) ReqEnum(short rune, long string, valid []string, help string) {
-	c.addOption(&option{short: short, long: long, help: help, valid: valid,
+// The command's description used to render the command's help.
+func (c *Cmd) ReqEnum(short rune, long string, valid []string, description string) {
+	c.addOption(&option{short: short, long: long, description: description, valid: valid,
 		required: true, dataType: enum})
 }
 
 // OptString adds a optional option with a string parameter.
 // Short is a one letter option. Short is not used if '0'.
 // Long is the long name for the option. Long is not used if empty.
-// Help is displayed when the usage message is printed.
-func (c *Cmd) OptString(short rune, long string, help string) {
-	c.addOption(&option{short: short, long: long, help: help,
+// The command's description used to render the command's help.
+func (c *Cmd) OptString(short rune, long string, description string) {
+	c.addOption(&option{short: short, long: long, description: description,
 		dataType: String})
 }
 
 // OptBool adds a optional option with a bool parameter.
 // Short is a one letter option. Short is not used if '0'.
 // Long is the long name for the option. Long is not used if empty.
-// Help is displayed when the usage message is printed.
-func (c *Cmd) OptBool(short rune, long string, help string) {
-	c.addOption(&option{short: short, long: long, help: help,
+// The command's description used to render the command's help.
+func (c *Cmd) OptBool(short rune, long string, description string) {
+	c.addOption(&option{short: short, long: long, description: description,
 		dataType: Bool})
 }
 
 // OptInt64 adds a optional option with a int64 parameter.
 // Short is a one letter option. Short is not used if '0'.
 // Long is the long name for the option. Long is not used if empty.
-// Help is displayed when the usage message is printed.
-func (c *Cmd) OptInt64(short rune, long string, help string) {
-	c.addOption(&option{short: short, long: long, help: help,
+// The command's description used to render the command's help.
+func (c *Cmd) OptInt64(short rune, long string, description string) {
+	c.addOption(&option{short: short, long: long, description: description,
 		dataType: Int64})
 }
 
 // OptUint64 adds a optional option with a uint64 parameter.
 // Short is a one letter option. Short is not used if '0'.
 // Long is the long name for the option. Long is not used if empty.
-// Help is displayed when the usage message is printed.
-func (c *Cmd) OptUint64(short rune, long string, help string) {
-	c.addOption(&option{short: short, long: long, help: help,
+// The command's description used to render the command's help.
+func (c *Cmd) OptUint64(short rune, long string, description string) {
+	c.addOption(&option{short: short, long: long, description: description,
 		dataType: Uint64})
 }
 
 // OptFloat64 adds a optional option with a float64 parameter.
 // Short is a one letter option. Short is not used if '0'.
 // Long is the long name for the option. Long is not used if empty.
-// Help is displayed when the usage message is printed.
-func (c *Cmd) OptFloat64(short rune, long string, help string) {
-	c.addOption(&option{short: short, long: long, help: help,
+// The command's description used to render the command's help.
+func (c *Cmd) OptFloat64(short rune, long string, description string) {
+	c.addOption(&option{short: short, long: long, description: description,
 		dataType: Float64})
 }
 
@@ -140,9 +140,9 @@ func (c *Cmd) OptFloat64(short rune, long string, help string) {
 // that are acceped by this option.
 // Short is a one letter option. Short is not used if '0'.
 // Long is the long name for the option. Long is not used if empty.
-// Help is displayed when the usage message is printed.
-func (c *Cmd) OptEnum(short rune, long string, valid []string, help string) {
-	c.addOption(&option{short: short, long: long, help: help, valid: valid,
+// The command's description used to render the command's help.
+func (c *Cmd) OptEnum(short rune, long string, valid []string, description string) {
+	c.addOption(&option{short: short, long: long, description: description, valid: valid,
 		dataType: enum})
 }
 
@@ -264,13 +264,13 @@ func (c *Cmd) hasOperands() bool {
 }
 
 type option struct {
-	required bool
-	short    rune
-	long     string
-	help     string
-	dataType DataType
-	valid    []string
-	arg      string
+	required    bool
+	short       rune
+	long        string
+	description string
+	dataType    DataType
+	valid       []string
+	arg         string
 }
 
 type operand struct {

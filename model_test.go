@@ -13,7 +13,7 @@ func TestAllRequired(t *testing.T) {
 	cmd := &Cmd{}
 	cmd.Name = "show"
 	cmd.Prefix = "box user"
-	cmd.Help = "Show user name"
+	cmd.Description = "Show user name"
 	cmd.ReqInt64('i', "id", "The ID of the user to show")
 	cmd.ReqString('c', "city", "The name of the city")
 	cmd.ReqBool('a', "admin", "Include admins in the result")
@@ -49,7 +49,7 @@ func TestInvalid(t *testing.T) {
 	cmd := &Cmd{}
 	cmd.Name = "show"
 	cmd.Prefix = "box user"
-	cmd.Help = "Show user name"
+	cmd.Description = "Show user name"
 	cmd.ReqInt64('i', "id", "The ID of the user to show")
 	cmd.ReqString('c', "city", "The name of the city")
 

@@ -126,7 +126,7 @@ func TestParserNegative(t *testing.T) {
 	err = testCmd(showCmd, []string{
 		"a.out", "users", "showCmd", "--admin", "--id", "3"})
 	if err == nil {
-		t.Errorf("Parse should fail with invalid deparment")
+		t.Errorf("Parse should fail with invalid department")
 	}
 	err = testCmd(deleteCmd, []string{"a.out", "users", "delete", "-i3"})
 	if err == nil {
@@ -142,7 +142,7 @@ func getShowCmd() *Cmd {
 	showCmd := &Cmd{
 		Prefix: "users",
 		Name:   "showCmd",
-		Help:   "Show users",
+		Description:   "Show users",
 		Exec: func(args ExecArgs) error {
 			var i int64
 			if args.HasOption("") {
@@ -179,7 +179,7 @@ func getDelCmd() *Cmd {
 	deleteCmd := &Cmd{
 		Prefix: "users",
 		Name:   "delete",
-		Help:   "Deletes a user",
+		Description:   "Deletes a user",
 		Exec: func(args ExecArgs) error {
 			return fmt.Errorf("Delete must fail")
 		},
@@ -191,7 +191,7 @@ func getSearchCmd() *Cmd {
 	searchCmd := &Cmd{
 		Prefix: "",
 		Name:   "search",
-		Help:   "Search files",
+		Description:   "Search files",
 		Exec: func(args ExecArgs) error {
 			var boot string
 			var all []string
@@ -211,7 +211,7 @@ func getOperCmd() *Cmd {
 	operCmd := &Cmd{
 		Prefix: "",
 		Name:   "oper",
-		Help:   "Test the operands",
+		Description:   "Test the operands",
 		Exec: func(args ExecArgs) error {
 			//Test some basic cases here
 			if args.GetOption("", nil) {

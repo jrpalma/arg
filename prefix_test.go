@@ -33,13 +33,13 @@ func TestPrefix(t *testing.T) {
 		t.Errorf("Prefixes should not be equal")
 	}
 
-	pfx.addCmd(&Cmd{Prefix: pfxStr, Name: "cmd", Help: "cmd"})
+	pfx.addCmd(&Cmd{Prefix: pfxStr, Name: "cmd", Description: "cmd"})
 	cmd, ok := pfx.getCmd("cmd")
 	if !ok {
 		t.Errorf("Prefix should have a command named cmd")
 	}
 
-	if cmd.Name != "cmd" || cmd.Help != "cmd" {
+	if cmd.Name != "cmd" || cmd.Description != "cmd" {
 		t.Errorf("Prefix has wrong command")
 	}
 
