@@ -42,7 +42,7 @@ func (c *Cmd) Option(short rune, long string, description string) {
 // The command's description used to render the command's help.
 func (c *Cmd) ReqString(short rune, long string, description string) {
 	c.addOption(&option{short: short, long: long, description: description,
-		required: true, dataType: String})
+		required: true, dataType: typeString})
 }
 
 // ReqBool adds a required option with a bool parameter.
@@ -51,7 +51,7 @@ func (c *Cmd) ReqString(short rune, long string, description string) {
 // The command's description used to render the command's help.
 func (c *Cmd) ReqBool(short rune, long string, description string) {
 	c.addOption(&option{short: short, long: long, description: description,
-		required: true, dataType: Bool})
+		required: true, dataType: typeBool})
 }
 
 // ReqInt64 adds a required option with a int64 parameter.
@@ -60,7 +60,7 @@ func (c *Cmd) ReqBool(short rune, long string, description string) {
 // The command's description used to render the command's help.
 func (c *Cmd) ReqInt64(short rune, long string, description string) {
 	c.addOption(&option{short: short, long: long, description: description,
-		required: true, dataType: Int64})
+		required: true, dataType: typeInt64})
 }
 
 // ReqUint64 adds a required option with a uint64 parameter.
@@ -69,7 +69,7 @@ func (c *Cmd) ReqInt64(short rune, long string, description string) {
 // The command's description used to render the command's help.
 func (c *Cmd) ReqUint64(short rune, long string, description string) {
 	c.addOption(&option{short: short, long: long, description: description,
-		required: true, dataType: Uint64})
+		required: true, dataType: typeUint64})
 }
 
 // ReqFloat64 adds a required option with a float64 parameter.
@@ -78,7 +78,7 @@ func (c *Cmd) ReqUint64(short rune, long string, description string) {
 // The command's description used to render the command's help.
 func (c *Cmd) ReqFloat64(short rune, long string, description string) {
 	c.addOption(&option{short: short, long: long, description: description,
-		required: true, dataType: Float64})
+		required: true, dataType: typeFloat64})
 }
 
 // ReqEnum adds a required enum option. Valid are the valid values
@@ -88,7 +88,7 @@ func (c *Cmd) ReqFloat64(short rune, long string, description string) {
 // The command's description used to render the command's help.
 func (c *Cmd) ReqEnum(short rune, long string, valid []string, description string) {
 	c.addOption(&option{short: short, long: long, description: description, valid: valid,
-		required: true, dataType: enum})
+		required: true, dataType: typeEnum})
 }
 
 // OptString adds a optional option with a string parameter.
@@ -97,7 +97,7 @@ func (c *Cmd) ReqEnum(short rune, long string, valid []string, description strin
 // The command's description used to render the command's help.
 func (c *Cmd) OptString(short rune, long string, description string) {
 	c.addOption(&option{short: short, long: long, description: description,
-		dataType: String})
+		dataType: typeString})
 }
 
 // OptBool adds a optional option with a bool parameter.
@@ -106,7 +106,7 @@ func (c *Cmd) OptString(short rune, long string, description string) {
 // The command's description used to render the command's help.
 func (c *Cmd) OptBool(short rune, long string, description string) {
 	c.addOption(&option{short: short, long: long, description: description,
-		dataType: Bool})
+		dataType: typeBool})
 }
 
 // OptInt64 adds a optional option with a int64 parameter.
@@ -115,7 +115,7 @@ func (c *Cmd) OptBool(short rune, long string, description string) {
 // The command's description used to render the command's help.
 func (c *Cmd) OptInt64(short rune, long string, description string) {
 	c.addOption(&option{short: short, long: long, description: description,
-		dataType: Int64})
+		dataType: typeInt64})
 }
 
 // OptUint64 adds a optional option with a uint64 parameter.
@@ -124,7 +124,7 @@ func (c *Cmd) OptInt64(short rune, long string, description string) {
 // The command's description used to render the command's help.
 func (c *Cmd) OptUint64(short rune, long string, description string) {
 	c.addOption(&option{short: short, long: long, description: description,
-		dataType: Uint64})
+		dataType: typeUint64})
 }
 
 // OptFloat64 adds a optional option with a float64 parameter.
@@ -133,7 +133,7 @@ func (c *Cmd) OptUint64(short rune, long string, description string) {
 // The command's description used to render the command's help.
 func (c *Cmd) OptFloat64(short rune, long string, description string) {
 	c.addOption(&option{short: short, long: long, description: description,
-		dataType: Float64})
+		dataType: typeFloat64})
 }
 
 // OptEnum adds a optinal enum option. Valid are the valid values
@@ -143,15 +143,41 @@ func (c *Cmd) OptFloat64(short rune, long string, description string) {
 // The command's description used to render the command's help.
 func (c *Cmd) OptEnum(short rune, long string, valid []string, description string) {
 	c.addOption(&option{short: short, long: long, description: description, valid: valid,
-		dataType: enum})
+		dataType: typeEnum})
 }
 
-// Operand adds an operand with the give position, name, and data type.
+// StringOperand adds a string operand with the give position and name.
 // Position starts from zero on wards. The operand is named by name.
-// The operand data type can be specified. Valid data types are: String,
-// Bool, Int64, Uint64, and Float64
-func (c *Cmd) Operand(position int, name string, dataType DataType) {
-	c.addOperand(&operand{position: position, name: name, dataType: dataType})
+func (c *Cmd) StringOperand(position int, name string) {
+	c.addOperand(&operand{position: position, name: name, dataType: typeString})
+	c.hasOper = true
+}
+
+// BoolOperand adds a bool operand with the give position and name.
+// Position starts from zero on wards. The operand is named by name.
+func (c *Cmd) BoolOperand(position int, name string) {
+	c.addOperand(&operand{position: position, name: name, dataType: typeBool})
+	c.hasOper = true
+}
+
+// Int64Operand adds a int64 operand with the give position and name.
+// Position starts from zero on wards. The operand is named by name.
+func (c *Cmd) Int64Operand(position int, name string) {
+	c.addOperand(&operand{position: position, name: name, dataType: typeInt64})
+	c.hasOper = true
+}
+
+// Uint64Operand adds a uint64 operand with the give position and name.
+// Position starts from zero on wards. The operand is named by name.
+func (c *Cmd) Uint64Operand(position int, name string) {
+	c.addOperand(&operand{position: position, name: name, dataType: typeUint64})
+	c.hasOper = true
+}
+
+// Float64Operand adds a float64 operand with the give position and name.
+// Position starts from zero on wards. The operand is named by name.
+func (c *Cmd) Float64Operand(position int, name string) {
+	c.addOperand(&operand{position: position, name: name, dataType: typeFloat64})
 	c.hasOper = true
 }
 
@@ -259,16 +285,13 @@ func (c *Cmd) getOperands() map[int]operand {
 func (c *Cmd) hasOptions() bool {
 	return c.hasOpts
 }
-func (c *Cmd) hasOperands() bool {
-	return c.hasOper
-}
 
 type option struct {
 	required    bool
 	short       rune
 	long        string
 	description string
-	dataType    DataType
+	dataType    dataType
 	valid       []string
 	arg         string
 }
@@ -276,5 +299,5 @@ type option struct {
 type operand struct {
 	position int
 	name     string
-	dataType DataType
+	dataType dataType
 }

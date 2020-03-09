@@ -32,15 +32,15 @@ func (m *model) parseArgs(cmd *Cmd) (ExecArgs, error) {
 
 		canUseNext := (i + 1) < len(m.args)
 		for _, opt := range opts {
-			if opt.dataType == none {
+			if opt.dataType == typeNone {
 				execArgs.setOption(opt.short, opt.long)
 			}
-			if opt.dataType != none && len(opt.arg) != 0 {
+			if opt.dataType != typeNone && len(opt.arg) != 0 {
 				execArgs.addFlag(opt.short, opt.long, opt.arg)
 				delete(missingRequired, string(opt.short))
 				delete(missingRequired, opt.long)
 			}
-			if opt.dataType != none && len(opt.arg) == 0 && canUseNext {
+			if opt.dataType != typeNone && len(opt.arg) == 0 && canUseNext {
 				execArgs.addFlag(opt.short, opt.long, m.args[i+1])
 				delete(missingRequired, string(opt.short))
 				delete(missingRequired, opt.long)
@@ -106,15 +106,15 @@ func (m *model) validOperandType(cmdOper operand, value string) bool {
 	var f float64
 
 	switch cmdOper.dataType {
-	case String:
+	case typeString:
 		stat = true
-	case Bool:
+	case typeBool:
 		stat = getBool(value, &b)
-	case Int64:
+	case typeInt64:
 		stat = getInt64(value, &i)
-	case Uint64:
+	case typeUint64:
 		stat = getUint64(value, &u)
-	case Float64:
+	case typeFloat64:
 		stat = getFloat64(value, &f)
 	default:
 		stat = false
