@@ -54,18 +54,18 @@ func DisableUser(args ExecArgs) error {
 func Example_usage() {
 
 	showCmd := &Cmd{
-		Prefix: "users",
-		Name:   "show",
-		Description:   "Displays all the users",
-		Exec:   ShowUser,
+		Prefix:      "users",
+		Name:        "show",
+		Description: "Displays all the users",
+		Exec:        ShowUser,
 	}
 	showCmd.ReqInt64('i', "id", "The user ID to be shown")
 
 	disableCmd := &Cmd{
-		Prefix: "users",
-		Name:   "disable",
-		Description:   "Disables a user by the given ID",
-		Exec:   DisableUser,
+		Prefix:      "users",
+		Name:        "disable",
+		Description: "Disables a user by the given ID",
+		Exec:        DisableUser,
 	}
 	disableCmd.ReqInt64('i', "id", "The user ID to be disabled")
 
