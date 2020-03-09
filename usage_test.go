@@ -56,7 +56,7 @@ func Example_usage() {
 	showCmd := &Cmd{
 		Prefix: "users",
 		Name:   "show",
-		Help:   "Displays all the users",
+		Description:   "Displays all the users",
 		Exec:   ShowUser,
 	}
 	showCmd.ReqInt64('i', "id", "The user ID to be shown")
@@ -64,7 +64,7 @@ func Example_usage() {
 	disableCmd := &Cmd{
 		Prefix: "users",
 		Name:   "disable",
-		Help:   "Disables a user by the given ID",
+		Description:   "Disables a user by the given ID",
 		Exec:   DisableUser,
 	}
 	disableCmd.ReqInt64('i', "id", "The user ID to be disabled")

@@ -9,7 +9,7 @@ func TestReqCmd(t *testing.T) {
 
 	c.ReqInt64('a', "age", "")
 	c.ReqUint64('p', "points", "")
-	c.Option('h', "help", "")
+	c.Option('h', "Description", "")
 	c.ReqBool('c', "count", "")
 	c.ReqString('b', "branch", "")
 	c.ReqFloat64('s', "salary", "")
@@ -28,7 +28,7 @@ func TestOptCmd(t *testing.T) {
 
 	c.OptInt64('a', "age", "")
 	c.OptUint64('p', "points", "")
-	c.Option('h', "help", "")
+	c.Option('h', "Description", "")
 	c.OptBool('f', "force", "")
 	c.OptString('b', "branch", "")
 	c.OptFloat64('s', "salary", "")

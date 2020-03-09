@@ -148,7 +148,7 @@ func (p *Parser) usage(execName string) {
 func (p *Parser) cmdUsage(pfx string, cmd *Cmd) {
 
 	var synopsis string
-	help := tab + tab + cmd.Help + nl + nl
+	help := tab + tab + cmd.Description + nl + nl
 
 	if len(pfx) == 0 {
 		synopsis += tab + cmd.Name
@@ -167,7 +167,7 @@ func (p *Parser) cmdUsage(pfx string, cmd *Cmd) {
 }
 func (p *Parser) cmdHelp(execName string, pfx string, cmd *Cmd) {
 	synopsis := "SYNOPSIS:" + nl + tab
-	help := "NAME:" + nl + tab + cmd.Help + nl
+	help := "NAME:" + nl + tab + cmd.Description + nl
 
 	if len(pfx) == 0 {
 		synopsis += execName + space + cmd.Name
@@ -196,7 +196,7 @@ func (p *Parser) optsHelp(cmd *Cmd) {
 			delete(longOptions, shortOpt.long)
 			str += ", --" + shortOpt.long
 		}
-		p.print(str + nl + tab + tab + shortOpt.help + nl + nl)
+		p.print(str + nl + tab + tab + shortOpt.description + nl + nl)
 	}
 	for _, longOpt := range longOptions {
 		str := tab
@@ -204,7 +204,7 @@ func (p *Parser) optsHelp(cmd *Cmd) {
 			str += "-" + string(longOpt.short) + ", "
 		}
 		str += "--" + longOpt.long
-		p.print(str + nl + tab + tab + longOpt.help + nl + nl)
+		p.print(str + nl + tab + tab + longOpt.description + nl + nl)
 	}
 
 }
