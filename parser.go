@@ -125,6 +125,12 @@ func (p *Parser) getModels(execArgs []string) []model {
 	var models []model
 	var prefix string
 
+	models = append(models, model{
+		pfx:  newPrefix(""),
+		args: execArgs,
+		name: "",
+	})
+
 	for i, token := range execArgs {
 		models = append(models, model{
 			pfx:  newPrefix(prefix),
