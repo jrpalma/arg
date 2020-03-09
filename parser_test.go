@@ -140,9 +140,9 @@ func TestParserNegative(t *testing.T) {
 
 func getShowCmd() *Cmd {
 	showCmd := &Cmd{
-		Prefix: "users",
-		Name:   "showCmd",
-		Description:   "Show users",
+		Prefix:      "users",
+		Name:        "showCmd",
+		Description: "Show users",
 		Exec: func(args ExecArgs) error {
 			var i int64
 			if args.HasOption("") {
@@ -177,9 +177,9 @@ func getShowCmd() *Cmd {
 }
 func getDelCmd() *Cmd {
 	deleteCmd := &Cmd{
-		Prefix: "users",
-		Name:   "delete",
-		Description:   "Deletes a user",
+		Prefix:      "users",
+		Name:        "delete",
+		Description: "Deletes a user",
 		Exec: func(args ExecArgs) error {
 			return fmt.Errorf("Delete must fail")
 		},
@@ -189,9 +189,9 @@ func getDelCmd() *Cmd {
 }
 func getSearchCmd() *Cmd {
 	searchCmd := &Cmd{
-		Prefix: "",
-		Name:   "search",
-		Description:   "Search files",
+		Prefix:      "",
+		Name:        "search",
+		Description: "Search files",
 		Exec: func(args ExecArgs) error {
 			var boot string
 			var all []string
@@ -209,9 +209,9 @@ func getSearchCmd() *Cmd {
 }
 func getOperCmd() *Cmd {
 	operCmd := &Cmd{
-		Prefix: "",
-		Name:   "oper",
-		Description:   "Test the operands",
+		Prefix:      "",
+		Name:        "oper",
+		Description: "Test the operands",
 		Exec: func(args ExecArgs) error {
 			//Test some basic cases here
 			if args.GetOption("", nil) {
