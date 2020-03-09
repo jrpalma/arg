@@ -51,14 +51,13 @@ The combination of commands and parser allow users to specify actions that get t
 Arg's CLIs can be easily described as `APP PREFIX COMMAND OPTIONS OPERANDS`. The following list describes this in more details.
 - APP: The compiled application
 - PREFIX: The command's prefix. This can be any string including the empty string.
-- COMMAND: This is the command's name.
+- COMMAND: This is the command's name. The name can be empty for the root command.
 - OPTIONS: Arguments that start with - or --
-- OPERANDS: Arguments passed to the command line that are not options.
+- OPERANDS: Arguments passed to the command after all the options.
 
 ## Commands
-Commands describe the CLI and execute actions when the arguments match the command's description. The command has the following fields: Prefix, Name, Description, and Exec.
-The Prefix can be any string including the empty. Name is the command's name. Description is a short description for the command and is used to render the command's help. The
-Exec method is called when the parser matches the argument against the command's description. The following sample code creates a command that prints a version number:
+Commands describe the CLI and execute actions when the arguments match the command. The command has the following fields: Prefix, Name, Description, and Exec.
+The Prefix can be any string including the empty string. Name is the command's name. Description is a short description for the command and is used to render the command's help. The Exec method is called when the parser matches the argument against. The following sample code creates a command that prints a version number:
 ```go
 verCmd := &arg.Cmd {
 	Prefix: "engine",
@@ -71,31 +70,31 @@ verCmd := &arg.Cmd {
 }
 ```
 ## Arguments
-A command's Exec function receives its options and arguments through ExecArgs interface. ExecArgs is a convenience interface that allows quick access options and operands.
-The following example shows how ExecArgs can be used to check options, get option values, and get operands value:
+A command's Exec function receives its options and operands through the ExecArgs interface. ExecArgs is a convenience interface that allows quick access to options and operands. The following example shows how ExecArgs can be used to check options, get option values, and get operands value:
 ```go
-cmd := &arg.Cmd{
-	Name: "cp",
-	Description: "cp copies SOURCE to DEST",
-	Exec: func(argv arg.ExecArg) error {
-		var recursive bool
-		var src, dst string
-		if argv.HasOption("r") {
-			recursive = true
+cp := &arg.Cmd{
+	Name:        "",
+	Description: "cp - Copy SRC to DEST",
+	Exec: func(ea arg.ExecArgs) error {
+		var src, dest, t string
+		recursive := ea.HasOption("r")
+		if e.GetOption("t", &t) {
+			return fmt.Errorf("Invalid t option")
 		}
-		if argv.GetOperand(0, &src) {
-			return fmt.Errorf("Invalid operand SOURCE")
+		if ea.GetOperand(0, &src) {
+			return fmt.Errorf("Invalid SRC operand")
 		}
-		if argv.GetOperand(1, &dst) {
-			return fmt.Errorf("Invalid operand DEST")
+		if ea.GetOperand(1, &dest) {
+			return fmt.Errorf("Invalid DEST operand")
 		}
 		...
 		return nil
-	}
+	},
 }
-cmd.OptString('r', "", "Use recursion")
-cmd.StringOperand(0, "SOURCE")
-cmd.StringOperand(1, "DEST")
+cp.Option('r', "", "Recursive")
+cp.ReqString('t', "", "Type")
+cp.StringOperand(0, "SRC")
+cp.StringOperand(1, "DEST")
 
 ```
 
@@ -123,7 +122,7 @@ cmd.Option('f', "force", "Force the operation")
 ```
 
 ## Operands
-Operands are arguments that are passed to commands after all the options are parsed or any arguments after '--' marker.
+Operands are arguments that are passed to commands after all the options are parsed or after '--' argument marker.
 Operands have a position and a type. The parser validates the operand position and type before calling Exec method on a command.
 The parser will not call the command Exec function if the arguments do not match the command's operands. The following sample code
 illustrates how operands can be used:
@@ -141,16 +140,37 @@ Parser objects match the command line arguments to commands. If the arguments ma
 The following code example demonstrate the use of a parser object:
 ```go
 func main() {
-	parser := arg.NewParser(os.Stdout)
-	cmdVer := &arg.Cmd{
-		Name: "version",
-		Exec: func(argv &arg.ExecArgs) {
-			fmt.Printf("Version: v1.0.0\n")
+	cp := &arg.Cmd{
+		Name:        "",
+		Description: "cp - Copy SRC to DEST",
+		Exec: func(ea arg.ExecArgs) error {
+			var src, dest, t string
+			recursive := ea.HasOption("r")
+			if e.GetOption("t", &t) {
+				return fmt.Errorf("Invalid t option")
+			}
+			if ea.GetOperand(0, &src) {
+				return fmt.Errorf("Invalid SRC operand")
+			}
+			if ea.GetOperand(1, &dest) {
+				return fmt.Errorf("Invalid DEST operand")
+			}
+			...
 			return nil
-		}
+		},
 	}
-	parser.AddCmd(cmdVer)
-	err := parser.Parse(true, os.Args[:])
+	cp.Option('r', "", "Recursive")
+	cp.ReqString('t', "", "Type")
+	cp.StringOperand(0, "SRC")
+	cp.StringOperand(1, "DEST")
+
+	parser := arg.NewParser(os.Stdout)
+	parser.AddCmd(cp)
+
+	err := parser.Parse(false, os.Args)
+	if err != nil {
+		fmt.Printf("Error: %v\n", err)
+	}
 }
 ```
 
