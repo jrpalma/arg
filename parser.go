@@ -112,7 +112,7 @@ func (p *Parser) Parse(exitOnError bool, args []string) error {
 
 	err = cmd.Exec(execArgs)
 	if err != nil {
-		p.print(err.Error())
+		p.print(err.Error() + nl)
 		if !exitOnError {
 			return err
 		}
